@@ -23,7 +23,11 @@ USE griffin_lamps;
 -- =====================================
 CREATE TABLE coleccion (
     id     INT          AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL
+    nombre VARCHAR(100) NOT NULL,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  unique (nombre),
+  index ndx_nombre (nombre)
 ) ENGINE = InnoDB;
 
 -- =====================================
