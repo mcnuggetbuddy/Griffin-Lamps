@@ -1,7 +1,7 @@
-package com.GriffinLamps.pagina.service;
+package com.GriffinLamps.pagina.Service;
 
-import com.GriffinLamps.pagina.domain.Coleccion;
-import com.GriffinLamps.pagina.repository.ColeccionRepository;
+import com.GriffinLamps.pagina.Domain.Coleccion;
+import com.GriffinLamps.pagina.Repository.ColeccionRepository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;

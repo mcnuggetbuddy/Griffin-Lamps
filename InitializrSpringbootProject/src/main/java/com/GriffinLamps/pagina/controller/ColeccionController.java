@@ -1,7 +1,7 @@
-package com.GriffinLamps.pagina.controller;
+package com.GriffinLamps.pagina.Controller;
 
-import com.GriffinLamps.pagina.domain.Coleccion;
-import com.GriffinLamps.pagina.service.ColeccionService;
+import com.GriffinLamps.pagina.Domain.Coleccion;
+import com.GriffinLamps.pagina.Service.ColeccionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
