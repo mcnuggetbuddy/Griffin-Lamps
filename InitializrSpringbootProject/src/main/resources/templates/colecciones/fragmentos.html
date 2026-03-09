@@ -1,3 +1,44 @@
+<section th:fragment="agregar">
+    <div class='row py-4 mb-2 bg-light'>
+        <div class='col-md-1'></div>
+        <div class='col-md-3'>
+            <button type="button" class="btn btn-primary"
+                    data-bs-toggle="modal" data-bs-target="#agregarColeccionModal">
+                <i class="fa-solid fa-plus"></i> [[#{coleccion.agregar}]]</button>
+        </div>
+    </div>
+    <div class="modal fade" id="agregarColeccionModal" tabindex="-1"
+         aria-labelledby="agregarColeccionLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h1 class="modal-title fs-5" id="agregarColeccionLabel">
+                        <i class="fa-solid fa-layer-group"></i> [[#{coleccion.agregar}]]
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form th:action='@{/colecciones/guardar}' th:object='${coleccion}'
+                      class='was-validated' method="post">
+                    <div class="modal-body">
+                        <div class='mb-3'>
+                            <label>[[#{coleccion.nombre}]]</label>
+                            <input type="text" name="nombre" class="form-control" required="true"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fa-solid fa-xmark"></i> [[#{accion.cerrar}]]
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa-solid fa-floppy-disk"></i> [[#{accion.guardar}]]
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
 <section th:fragment="listado" class="p-3">
     <div class="row p-3">
         <div class="col-md-9">
@@ -12,12 +53,26 @@
                                 <tr>
                                     <th>#</th>
                                     <th>[[#{coleccion.nombre}]]</th>
+                                    <th>[[#{coleccion.fechaCreacion}]]</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr th:each="c : ${colecciones}">
                                     <td>[[${c.id}]]</td>
                                     <td>[[${c.nombre}]]</td>
+                                    <td>[[${#dates.format(c.fechaCreacion, 'dd/MM/yyyy HH:mm')}]]</td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger"
+                                                data-bs-toggle="modal" data-bs-target="#confirmModal"
+                                                th:data-bs-id="${c.id}"
+                                                th:data-bs-descripcion="${c.nombre}">
+                                            <i class="fa-solid fa-trash"></i> [[#{accion.eliminar}]]
+                                        </button>
+                                        <a th:href="@{/colecciones/modificar/}+${c.id}" class="btn btn-warning">
+                                            <i class="fas fa-pencil-alt"></i> [[#{accion.actualizar}]]
+                                        </a>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -32,8 +87,94 @@
             <div class="card text-center bg-success text-white mb-3">
                 <div class="card-body">
                     <h3>[[#{coleccion.total}]]</h3>
-                    <h4 class="fs-2">[[${totalColecciones}]]</h4>
+                    <h4 class="fs-2"><i class="fas fa-layer-group"></i> [[${totalColecciones}]]</h4>
                 </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section th:fragment="editar">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <form method="POST" th:action="@{/colecciones/guardar}"
+                  th:object="${coleccion}" class="was-validated">
+                <input type="hidden" th:field="*{id}"/>
+                <div class="row py-4 mb-4 bg-light">
+                    <div class="col-md-4 d-grid">
+                        <a th:href="@{/colecciones/listado}" class="btn btn-primary">
+                            <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
+                        </a>
+                    </div>
+                    <div class="col-md-4 d-grid">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check"></i> [[#{accion.guardar}]]
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>[[#{accion.actualizar}]]</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="nombre">[[#{coleccion.nombre}]]</label>
+                                    <input type="text" class="form-control"
+                                           th:field="*{nombre}" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label>[[#{coleccion.fechaCreacion}]]</label>
+                                    <input type="text" class="form-control"
+                                           th:value="${#dates.format(coleccion.fechaCreacion, 'dd/MM/yyyy HH:mm')}"
+                                           readonly="readonly"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label>[[#{coleccion.fechaModificacion}]]</label>
+                                    <input type="text" class="form-control"
+                                           th:value="${#dates.format(coleccion.fechaModificacion, 'dd/MM/yyyy HH:mm')}"
+                                           readonly="readonly"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<section th:fragment="confirmarEliminar">
+    <div class="modal fade"
+         id="confirmModal"
+         tabindex="-1"
+         aria-labelledby="modalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered custom-modal-animation">
+            <div class="modal-content animate-slide-up">
+                <form th:action="@{/colecciones/eliminar}" method="post">
+                    <input type="hidden" name="id" id="modalId"/>
+                    <div class="modal-header bg-warning text-white">
+                        <h5 class="modal-title" id="modalLabel">
+                            <i class="fa-solid fa-circle-radiation"></i> [[#{accion.confirmar}]]
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>[[#{accion.confirmar.texto1}]] <span id="modalDescripcion"></span>?</p>
+                        <h6>[[#{accion.confirmar.texto2}]]</h6>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fa-solid fa-trash"></i> [[#{accion.eliminar}]]
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fa-solid fa-xmark"></i> [[#{accion.cerrar}]]
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

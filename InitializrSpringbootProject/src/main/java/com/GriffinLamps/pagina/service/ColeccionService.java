@@ -4,6 +4,7 @@ import com.GriffinLamps.pagina.domain.Coleccion;
 import com.GriffinLamps.pagina.repository.ColeccionRepository;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,5 +25,22 @@ public class ColeccionService {
     @Transactional(readOnly = true)
     public Optional<Coleccion> getColeccion(Integer id) {
         return coleccionRepository.findById(id);
+    }
+
+    @Transactional
+    public void save(Coleccion coleccion) {
+        coleccionRepository.save(coleccion);
+    }
+
+    @Transactional
+    public void delete(Integer id) {
+        if (!coleccionRepository.existsById(id)) {
+            throw new IllegalArgumentException("La colección con ID " + id + " no existe.");
+        }
+        try {
+            coleccionRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalStateException("No se puede eliminar la colección. Tiene datos asociados.", e);
+        }
     }
 }

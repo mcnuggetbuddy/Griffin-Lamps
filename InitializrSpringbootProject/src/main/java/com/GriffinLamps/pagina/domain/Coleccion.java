@@ -1,5 +1,6 @@
 package com.GriffinLamps.pagina.domain;
 
+import java.sql.Timestamp;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,4 +25,10 @@ public class Coleccion implements Serializable {
     @Column(length = 1024)
     @Size(max = 1024)
     private String nombre;
+
+    @Column(name = "fecha_creacion", insertable = false, updatable = false)
+    private Timestamp fechaCreacion;
+
+    @Column(name = "fecha_modificacion", insertable = false, updatable = false)
+    private Timestamp fechaModificacion;
 }
