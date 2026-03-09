@@ -1,4 +1,4 @@
-package com.GriffinLamps.pagina.domain;
+package com.GriffinLamps.pagina.Domain;
 
 import java.sql.Timestamp;
 import jakarta.persistence.Column;
