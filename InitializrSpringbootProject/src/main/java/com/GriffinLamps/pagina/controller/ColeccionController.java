@@ -1,13 +1,11 @@
 package com.GriffinLamps.pagina.Controller;
 
-import com.GriffinLamps.pagina.domain.Coleccion;
-import com.GriffinLamps.pagina.service.ColeccionService;
+import com.GriffinLamps.pagina.Domain.Coleccion;
+import com.GriffinLamps.pagina.Service.ColeccionService;
 import jakarta.validation.Valid;
 import java.util.Locale;
 import java.util.Optional;
 import org.springframework.context.MessageSource;
-import com.GriffinLamps.pagina.Domain.Coleccion;
-import com.GriffinLamps.pagina.Service.ColeccionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
