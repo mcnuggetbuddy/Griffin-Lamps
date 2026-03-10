@@ -34,8 +34,8 @@
                     <li class="nav-item px-2"><a class="nav-link" th:href="@{/about/listado}">[[#{plantilla.about}]]</a></li>
                 </ul>
                 <form class="d-flex" role="search">
-                    <input class="form-control rounded-5 me-2" type="search" placeholder="Search" aria-label="Search"/>
-                    <button class="btn btn-outline-success rounded-5" type="submit">Search</button>
+                    <input class="form-control rounded-5 me-2" type="search" th:placeholder="#{plantilla.barra.buscar}" aria-label="Search"/>
+                    <button class="btn btn-outline-success rounded-5" type="submit">[[#{plantilla.boton.buscar}]]</button>
                 </form>
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">

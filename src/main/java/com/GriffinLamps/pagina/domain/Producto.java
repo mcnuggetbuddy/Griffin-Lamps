@@ -1,14 +1,19 @@
-package com.GriffinLamps.pagina.domain;
+package com.GriffinLamps.pagina.Domain;
 
-import jakarta.persistence.*;
-import lombok.Data;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.io.Serializable;
-import java.math.BigDecimal;
+import lombok.Data;
 
 @Data
 @Entity
-@Table(name="producto")
+@Table(name = "producto")
 public class Producto implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +21,7 @@ public class Producto implements Serializable {
 
     private String nombre;
     private String descripcion;
-    private BigDecimal precio;
+    private double precio;
     private String marca;
     private String categoria;
     private String imagen;
