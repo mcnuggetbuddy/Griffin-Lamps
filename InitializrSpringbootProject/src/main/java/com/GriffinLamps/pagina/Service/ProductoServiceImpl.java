@@ -1,7 +1,7 @@
-package com.GriffinLamps.pagina.service;
+package com.GriffinLamps.pagina.Service;
 
-import com.GriffinLamps.pagina.domain.Producto;
-import com.GriffinLamps.pagina.repository.ProductoRepository;
+import com.GriffinLamps.pagina.Domain.Producto;
+import com.GriffinLamps.pagina.Repository.ProductoRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
-package com.GriffinLamps.pagina.controller;
+package com.GriffinLamps.pagina.Controller;
 
-import com.GriffinLamps.pagina.domain.Producto;
-import com.GriffinLamps.pagina.service.ProductoService;
+import com.GriffinLamps.pagina.Domain.Producto;
+import com.GriffinLamps.pagina.Service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -1,6 +1,6 @@
-package com.GriffinLamps.pagina.repository;
+package com.GriffinLamps.pagina.Repository;
 
-import com.GriffinLamps.pagina.domain.Producto;
+import com.GriffinLamps.pagina.Domain.Producto;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductoRepository extends JpaRepository<Producto, Long> {

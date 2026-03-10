@@ -1,6 +1,6 @@
-package com.GriffinLamps.pagina.service;
+package com.GriffinLamps.pagina.Service;
 
-import com.GriffinLamps.pagina.domain.Producto;
+import com.GriffinLamps.pagina.Domain.Producto;
 import java.util.List;
 
 public interface ProductoService {
