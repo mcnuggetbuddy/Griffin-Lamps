@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     confirmModal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
         document.getElementById('modalId').value = button.getAttribute('data-bs-id');
-        document.getElementById('modalDescripcion').textContent = button.getAttribute('data-bs-descripcion');
+        document.getElementById('modalNombre').textContent = button.getAttribute('data-bs-nombre');
     });
 });
 
