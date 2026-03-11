@@ -1,0 +1,41 @@
+<section th:fragment="listado">
+    <div class="container mt-4">
+        <h2>Productos</h2>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Marca</th>
+                    <th>Estado</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr th:each="p : ${productos}">
+                    <td>[[${p.idProducto}]]</td>
+                    <td>[[${p.nombre}]]</td>
+                    <td>$[[${p.precio}]]</td>
+                    <td>[[${p.marca}]]</td>
+                    <td>[[${p.activo}]]</td>
+
+                    <td>
+                        <a th:href="@{/producto/modificar/}+${p.idProducto}"
+                           class="btn btn-warning">
+                           Editar
+                        </a>
+
+                        <a th:href="@{/producto/eliminar/}+${p.idProducto}"
+                           class="btn btn-danger">
+                           Eliminar
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</section>
