@@ -25,6 +25,32 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+// Modal editar color
+document.addEventListener('DOMContentLoaded', function () {
+    const editColorModal = document.getElementById('editColorModal');
+    if (editColorModal) {
+        editColorModal.addEventListener('show.bs.modal', function (event) {
+            const btn = event.relatedTarget;
+            document.getElementById('colorId').value = btn.getAttribute('data-id');
+            document.getElementById('colorNombre').value = btn.getAttribute('data-nombre');
+            document.getElementById('colorHex').value = btn.getAttribute('data-hex');
+            document.getElementById('colorProductoId').value = btn.getAttribute('data-producto');
+        });
+    }
+
+    // Modal editar variante
+    const editVarianteModal = document.getElementById('editVarianteModal');
+    if (editVarianteModal) {
+        editVarianteModal.addEventListener('show.bs.modal', function (event) {
+            const btn = event.relatedTarget;
+            document.getElementById('varianteId').value = btn.getAttribute('data-id');
+            document.getElementById('varianteTamano').value = btn.getAttribute('data-tamano');
+            document.getElementById('variantePrecio').value = btn.getAttribute('data-precio');
+            document.getElementById('varianteProductoId').value = btn.getAttribute('data-producto');
+        });
+    }
+});
+
 //Para quitar toast
 setTimeout(() => {
     document.querySelectorAll('.toast').forEach(t => t.classList.remove('show'));

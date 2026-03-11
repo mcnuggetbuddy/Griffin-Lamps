@@ -30,26 +30,41 @@ public class FirebaseStorageService {
         this.storage = storage;
     }
 
-    //Sube un archivo de imagen al almacenamiento de Firebase.    
-    public String uploadImage(MultipartFile localFile, String folder, Integer id) throws IOException {
+    public String uploadImage(MultipartFile localFile, Integer id) throws IOException {
         String originalName = localFile.getOriginalFilename();
         String fileExtension = "";
+        String baseName = "imagen";
+
         if (originalName != null && originalName.contains(".")) {
             fileExtension = originalName.substring(originalName.lastIndexOf("."));
+            baseName = originalName.substring(0, originalName.lastIndexOf("."));
         }
 
-        // Se genera el nombre del archivo con un formato consistente.
-        String fileName = "img" + getFormattedNumber(id) + fileExtension;
+        String fileName = baseName + fileExtension;
 
         File tempFile = convertToFile(localFile);
-
         try {
-            return uploadToFirebase(tempFile, folder, fileName);
+            return uploadToFirebase(tempFile, id, fileName);
         } finally {
-            // Asegura que el archivo temporal se elimine siempre.
             if (tempFile.exists()) {
                 tempFile.delete();
             }
+        }
+    }
+    
+    public void deleteImage(String signedUrl) {
+        try {
+            String path = signedUrl.split("\\?")[0];
+            String blobName = path.substring(path.indexOf(storagePath));
+
+            BlobId blobId = BlobId.of(bucketName, blobName);
+            boolean deleted = storage.delete(blobId);
+
+            if (!deleted) {
+                System.err.println("No se pudo eliminar la imagen: " + blobName);
+            }
+        } catch (Exception e) {
+            System.err.println("Error al eliminar imagen de Firebase: " + e.getMessage());
         }
     }
 
@@ -63,17 +78,14 @@ public class FirebaseStorageService {
     }
 
     //Sube el archivo al almacenamiento de Firebase y genera una URL firmada.     
-    private String uploadToFirebase(File file, String folder, String fileName) throws IOException {
-        // Definimos el ID del blob y su información
-        BlobId blobId = BlobId.of(bucketName, storagePath + "/" + folder + "/" + fileName);
+    private String uploadToFirebase(File file, Integer id, String fileName) throws IOException {
+        // ✅ Ruta: productos/1/imgXXXXXXXXXXXXXX.jpg
+        BlobId blobId = BlobId.of(bucketName, storagePath + "/" + id + "/" + fileName);
         String mimeType = Files.probeContentType(file.toPath());
-        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(mimeType != null ? mimeType : "media").build();
-
-        // Subimos el archivo. El objeto `storage` ya tiene las credenciales necesarias.
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
+                .setContentType(mimeType != null ? mimeType : "media")
+                .build();
         storage.create(blobInfo, Files.readAllBytes(file.toPath()));
-
-        // El objeto `storage` ya tiene las credenciales del servicio configuradas        
-        // Se genera la URL firmada. Ahora con una caducidad de 5 años.
         return storage.signUrl(blobInfo, 1825, TimeUnit.DAYS).toString();
     }
 

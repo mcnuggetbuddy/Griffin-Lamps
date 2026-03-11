@@ -63,6 +63,14 @@ public class ProductoService {
     }
     
     @Transactional
+    public void actualizarVariante(Integer idVariante, String tamano, BigDecimal precioExtra) {
+        Variante v = varianteRepository.findById(idVariante).orElseThrow();
+        v.setTamano(tamano);
+        v.setPrecioExtra(precioExtra);
+        varianteRepository.save(v);
+    }
+    
+    @Transactional
     public void agregarVariante(Integer productoId, Variante variante) {
 
         Producto producto = productoRepository.findById(productoId)
@@ -71,6 +79,24 @@ public class ProductoService {
         variante.setProducto(producto);
 
         varianteRepository.save(variante);
+    }
+    
+    @Transactional
+    public void eliminarVariante(Integer idVariante) {
+
+        if (!varianteRepository.existsById(idVariante)) {
+            throw new IllegalArgumentException("La variante no existe");
+        }
+
+        varianteRepository.deleteById(idVariante);
+    }
+    
+    @Transactional
+    public void actualizarColor(Integer idColor, String nombre, String codigoHex) {
+        Color c = colorRepository.findById(idColor).orElseThrow();
+        c.setNombre(nombre);
+        c.setCodigoHex(codigoHex);
+        colorRepository.save(c);
     }
     
     @Transactional
@@ -85,25 +111,50 @@ public class ProductoService {
     }
     
     @Transactional
+    public void eliminarColor(Integer idColor) {
+
+        if (!colorRepository.existsById(idColor)) {
+            throw new IllegalArgumentException("El color no existe");
+        }
+
+        colorRepository.deleteById(idColor);
+    }
+    
+    @Transactional
     public void save(Producto producto, MultipartFile[] imagenFiles) {
 
-        producto = productoRepository.save(producto);
+        Producto target;
+
+        if (producto.getIdProducto() != null) {
+            // ✅ Edición: trabajar SOLO sobre el objeto existente en BD
+            target = productoRepository.findById(producto.getIdProducto()).orElseThrow();
+            target.setNombre(producto.getNombre());
+            target.setDescripcion(producto.getDescripcion());
+            target.setPrecioColones(producto.getPrecioColones());
+            target.setExistencias(producto.getExistencias());
+            target.setTipoLuz(producto.getTipoLuz());
+            target.setMaterial(producto.getMaterial());
+            target.setTipoConexion(producto.getTipoConexion());
+            target.setDuracionBateria(producto.getDuracionBateria());
+            target.setActivo(producto.getActivo());
+            target.setDestacado(producto.getDestacado());
+            target.setColeccion(producto.getColeccion());
+        } else {
+            target = producto;
+        }
+
+        target = productoRepository.save(target);
 
         if (imagenFiles != null) {
             for (MultipartFile file : imagenFiles) {
-
-                if (!file.isEmpty()) {
-
+                if (file != null && !file.isEmpty()) {
                     try {
                         String url = firebaseStorageService.uploadImage(
-                                file, "producto", producto.getIdProducto());
-
+                                file, target.getIdProducto());
                         ProductoImagen img = new ProductoImagen();
                         img.setRutaImagen(url);
-                        img.setProducto(producto);
-
+                        img.setProducto(target);
                         productoImagenRepository.save(img);
-
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -113,28 +164,32 @@ public class ProductoService {
     }
     
     @Transactional
+    public void deleteImagen(Integer idImagen) {
+        productoImagenRepository.findById(idImagen).ifPresent(img -> {
+            firebaseStorageService.deleteImage(img.getRutaImagen()); // ✅ borra de Firebase
+        });
+        productoImagenRepository.deleteById(idImagen);
+    }
+
+    @Transactional
     public void delete(Integer idProducto) {
-        // Verifica si la categoría existe antes de intentar eliminarlo
         if (!productoRepository.existsById(idProducto)) {
-            // Lanza una excepción para indicar que el usuario no fue encontrado
-            throw new IllegalArgumentException("La categoría con ID " + idProducto + " no existe.");
+            throw new IllegalArgumentException("El producto con ID " + idProducto + " no existe.");
         }
         try {
+            List<ProductoImagen> imagenes = productoImagenRepository.findByProductoIdProducto(idProducto);
+            for (ProductoImagen img : imagenes) {
+                firebaseStorageService.deleteImage(img.getRutaImagen());
+            }
             productoRepository.deleteById(idProducto);
         } catch (DataIntegrityViolationException e) {
-            // Lanza una nueva excepción para encapsular el problema de integridad de datos
-            throw new IllegalStateException("No se puede eliminar la producto. Tiene datos asociados.", e);
+            throw new IllegalStateException("No se puede eliminar el producto. Tiene datos asociados.", e);
         }
     }
     
-    @Transactional
-    public void deleteImagen(Integer idImagen){
-        productoImagenRepository.deleteById(idImagen);
+    @Transactional(readOnly = true)
+    public List<Producto> consultaDerivada(BigDecimal precioInf, BigDecimal precioSup) {
+        return productoRepository.findByPrecioColonesBetweenOrderByPrecioColonesAsc(precioInf, precioSup);
     }
-                
-        @Transactional(readOnly = true)
-        public List<Producto> consultaDerivada(BigDecimal precioInf, BigDecimal precioSup){
-            return productoRepository.findByPrecioColonesBetweenOrderByPrecioColonesAsc(precioInf, precioSup);
-        }
      
 }

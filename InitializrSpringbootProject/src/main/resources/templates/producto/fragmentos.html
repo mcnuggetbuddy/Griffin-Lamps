@@ -11,7 +11,7 @@
                 <i class="fa-solid fa-plus"></i> [[#{producto.agregar}]]</button>
         </div>
     </div>
-    
+
     <!-- Modal -->
     <div class="modal fade" id="agregarProductoModal" tabindex="-1">
         <div class="modal-dialog">
@@ -88,7 +88,7 @@
                         <div class="mb-3">
                             <label>[[#{campo.imagenes}]]</label>
                             <input type="file"
-                                   name="imagenes"
+                                   name="imagenesFile"
                                    multiple
                                    class="form-control"/>
                         </div>
@@ -147,7 +147,7 @@
                                     </td>
                                     <td class="text-end">
                                         [[${#numbers.formatCurrency(p.precioColones * p.existencias)}]]
-                                    </td>   
+                                    </td>
                                     <td>
                                         <img th:if="${p.imagenes != null and !p.imagenes.empty}"
                                              th:src="@{${p.imagenes[0].rutaImagen}}"
@@ -155,24 +155,21 @@
                                         <span th:if="${p.imagenes == null or p.imagenes.empty}">
                                             Sin imagen
                                         </span>
-
                                     </td>
                                     <td>[[${p.coleccion.nombre}]]</td>
                                     <td th:text="${p.activo} ? 'Activa':'Inactiva'"></td>
                                     <td th:text="${p.destacado} ? 'Sí':'No'"></td>
                                     <td sec:authorize="hasRole('ROLE_ADMIN')">
-
                                         <button type="button"
                                                 class="btn btn-danger"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#confirmModal"
                                                 th:data-bs-id="${p.idProducto}"
                                                 th:data-bs-nombre="${p.nombre}">
-
                                             <i class="fa-solid fa-trash"></i>
                                             [[#{accion.eliminar}]]
                                         </button>
-                                        <a th:href="@{/producto/modificar/}+${p.idProducto}"
+                                        <a th:href="@{/producto/modificar/{idProducto}(idProducto=${p.idProducto})}"
                                            class="btn btn-warning">
                                             <i class="fas fa-pencil-alt"></i>
                                             [[#{accion.editar}]]
@@ -202,108 +199,254 @@
             </div>
         </div>
     </div>
-
 </section>
 
-<!-- Fragmento #3 que se utiliza en la página modifca.html -->
+<!-- Fragmento #3 que se utiliza en la página modifica.html -->
 <section th:fragment="editar">
+
     <div class="row">
         <div class="col-md-2"></div>
         <div class="col-md-8">
+
             <form method="POST"
                   th:action="@{/producto/guardar}"
                   th:object="${producto}"
                   enctype="multipart/form-data"
                   class="was-validated">
-                <input type="hidden"
-                       th:field="*{idProducto}"/>
+
+                <input type="hidden" th:field="*{idProducto}"/>
+
+                <!-- BOTONES -->
                 <div class="row py-4 mb-4 bg-light">
                     <div class="col-md-4 d-grid">
-                        <a th:href="@{/producto/listado}"
-                           class="btn btn-primary">
+                        <a th:href="@{/producto/listado}" class="btn btn-primary">
                             <i class="fas fa-arrow-left"></i>
                             [[#{accion.regresar}]]
                         </a>
                     </div>
                     <div class="col-md-4 d-grid">
-                        <button type="submit"
-                                class="btn btn-success">
+                        <button type="submit" class="btn btn-success">
                             <i class="fas fa-check"></i>
                             [[#{accion.guardar}]]
                         </button>
                     </div>
                 </div>
+
                 <div class="card">
                     <div class="card-header">
                         <h4>[[#{accion.actualizar}]]</h4>
                     </div>
                     <div class="card-body">
+
+                        <!-- NOMBRE -->
                         <div class="mb-3">
                             <label>Nombre</label>
-                            <input type="text"
-                                   class="form-control"
-                                   th:field="*{nombre}"/>
+                            <input type="text" class="form-control" th:field="*{nombre}" required/>
                         </div>
+
+                        <!-- DESCRIPCION -->
                         <div class="mb-3">
                             <label>Descripción</label>
-                            <textarea class="form-control"
-                                      th:field="*{descripcion}"></textarea>
+                            <textarea class="form-control" th:field="*{descripcion}"></textarea>
                         </div>
+
+                        <!-- PRECIO -->
                         <div class="mb-3">
                             <label>Precio</label>
-                            <input type="number"
-                                   class="form-control"
-                                   th:field="*{precioColones}"/>
-
+                            <input type="number" class="form-control" th:field="*{precioColones}" required/>
                         </div>
+
+                        <!-- EXISTENCIAS -->
                         <div class="mb-3">
                             <label>Existencias</label>
-                            <input type="number"
-                                   class="form-control"
-                                   th:field="*{existencias}"/>
+                            <input type="number" class="form-control" th:field="*{existencias}" required/>
                         </div>
+
+                        <!-- MATERIAL -->
+                        <div class="mb-3">
+                            <label>Material</label>
+                            <input type="text" class="form-control" th:field="*{material}" required/>
+                        </div>
+
+                        <!-- TIPO LUZ -->
+                        <div class="mb-3">
+                            <label>Tipo de Luz</label>
+                            <input type="text" class="form-control" th:field="*{tipoLuz}" required/>
+                        </div>
+
+                        <!-- TIPO CONEXION -->
+                        <div class="mb-3">
+                            <label>Tipo de conexión</label>
+                            <input type="text" class="form-control" th:field="*{tipoConexion}" required/>
+                        </div>
+
+                        <!-- DURACION BATERIA -->
+                        <div class="mb-3">
+                            <label>Duración batería</label>
+                            <input type="text" class="form-control" th:field="*{duracionBateria}"/>
+                        </div>
+
+                        <!-- COLECCION -->
+                        <div class="mb-3">
+                            <label>Colección</label>
+                            <select class="form-control" th:field="*{coleccion.id}" required>
+                                <option value="">Seleccione colección</option>
+                                <option th:each="c : ${colecciones}"
+                                        th:value="${c.id}"
+                                        th:text="${c.nombre}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- ACTIVO -->
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" th:field="*{activo}"/>
+                            <label class="form-check-label">Producto activo</label>
+                        </div>
+
+                        <!-- DESTACADO -->
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" th:field="*{destacado}"/>
+                            <label class="form-check-label">Producto destacado</label>
+                        </div>
+
+                        <!-- IMAGENES -->
                         <div class="mb-3">
                             <label>Imágenes</label>
-                            <input type="file"
-                                   name="imagenes"
-                                   multiple
-                                   class="form-control"/>
-                            <div th:if="${producto.imagenes != null}">
-                                <img th:each="img : ${producto.imagenes}"
-                                     th:src="@{${img.rutaImagen}}"
-                                     height="120"
-                                     class="me-2 mb-2"/>
+                            <input type="file" name="imagenesFile" multiple class="form-control"/>
+                            <div class="mt-3 d-flex flex-wrap">
+                                <div th:each="img : ${producto.imagenes}" class="position-relative me-2 mb-2">
+                                    <img th:src="${img.rutaImagen}" height="120" class="rounded border"/>
+                                    <a th:href="@{/producto/eliminarImagen/{id}(id=${img.idImagen}, idProducto=${producto.idProducto})}"
+                                       class="btn btn-danger btn-sm position-absolute top-0 end-0">X</a>
+                                </div>
                             </div>
                         </div>
+
+                        <!-- COLORES -->
                         <div class="mb-3">
                             <label>Colores</label>
-                            <ul>
-                                <li th:each="c : ${producto.colores}">
-                                    [[${c.nombre}]]
-                                </li>
-                            </ul>
+                            <div th:each="c : ${producto.colores}" class="input-group mb-2">
+                                <span class="input-group-text">
+                                    <span th:style="'background-color:' + ${c.codigoHex} + ';width:20px;height:20px;display:inline-block;border-radius:3px;'"></span>
+                                </span>
+                                <input type="text" class="form-control" th:value="${c.nombre}" readonly/>
+                                <button type="button"
+                                        class="btn btn-warning"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editColorModal"
+                                        th:data-id="${c.idColor}"
+                                        th:data-nombre="${c.nombre}"
+                                        th:data-hex="${c.codigoHex}"
+                                        th:data-producto="${producto.idProducto}">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </button>
+                                <a th:href="@{/producto/eliminarColor/{id}(id=${c.idColor}, idProducto=${producto.idProducto})}"
+                                   class="btn btn-danger">X</a>
+                            </div>
+                            <a th:href="@{/producto/agregarColor/{id}(id=${producto.idProducto})}"
+                               class="btn btn-outline-primary btn-sm">Agregar color</a>
                         </div>
+
+                        <!-- VARIANTES -->
                         <div class="mb-3">
                             <label>Variantes</label>
-                            <ul>
-                                <li th:each="v : ${producto.variantes}">
-                                    [[${v.tamano}]]
-                                </li>
-                            </ul>
+                            <div th:each="v : ${producto.variantes}" class="input-group mb-2">
+                                <input type="text" class="form-control" th:value="${v.tamano}" readonly/>
+                                <button type="button"
+                                        class="btn btn-warning"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editVarianteModal"
+                                        th:data-id="${v.idVariante}"
+                                        th:data-tamano="${v.tamano}"
+                                        th:data-precio="${v.precioExtra}"
+                                        th:data-producto="${producto.idProducto}">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </button>
+                                <a th:href="@{/producto/eliminarVariante/{id}(id=${v.idVariante}, idProducto=${producto.idProducto})}"
+                                   class="btn btn-danger">X</a>
+                            </div>
+                            <a th:href="@{/producto/agregarVariante/{id}(id=${producto.idProducto})}"
+                               class="btn btn-outline-primary btn-sm">Agregar variante</a>
                         </div>
+
                     </div>
                 </div>
             </form>
+
         </div>
     </div>
+
+    <!-- MODAL EDITAR COLOR -->
+    <div class="modal fade" id="editColorModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST" th:action="@{/producto/guardarColor}">
+                    <input type="hidden" name="idColor" id="colorId"/>
+                    <input type="hidden" name="idProducto" id="colorProductoId"/>
+                    <div class="modal-header bg-warning text-white">
+                        <h5 class="modal-title">Editar Color</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label>Nombre</label>
+                            <input type="text" name="nombre" id="colorNombre" class="form-control" required/>
+                        </div>
+                        <div class="mb-3">
+                            <label>Color</label>
+                            <input type="color" name="codigoHex" id="colorHex"
+                                   class="form-control form-control-color w-100"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-warning">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EDITAR VARIANTE -->
+    <div class="modal fade" id="editVarianteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST" th:action="@{/producto/guardarVariante}">
+                    <input type="hidden" name="idVariante" id="varianteId"/>
+                    <input type="hidden" name="idProducto" id="varianteProductoId"/>
+                    <div class="modal-header bg-warning text-white">
+                        <h5 class="modal-title">Editar Variante</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label>Tamaño</label>
+                            <input type="text" name="tamano" id="varianteTamano" class="form-control" required/>
+                        </div>
+                        <div class="mb-3">
+                            <label>Precio extra</label>
+                            <input type="number" name="precioExtra" id="variantePrecio"
+                                   class="form-control" min="0" step="0.01"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-warning">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </section>
 
-<!-- Fragmento #4 que se utiliza para confirmar que se desea eliminar una producto -->
+<!-- Fragmento #4 confirmar eliminar -->
 <section th:fragment="confirmarEliminar">
-    <div class="modal fade" 
-         id="confirmModal" 
-         tabindex="-1" 
-         aria-labelledby="modalLabel" 
+    <div class="modal fade"
+         id="confirmModal"
+         tabindex="-1"
+         aria-labelledby="modalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered custom-modal-animation">
             <div class="modal-content animate-slide-up">
@@ -316,7 +459,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body">
-                        <p>[[#{accion.confirmar.texto1}]] <span id="modalDescripcion"></span>?</p>
+                        <p>[[#{accion.confirmar.texto1}]] <span id="modalNombre"></span>?</p>
                         <h6>[[#{accion.confirmar.texto2}]]</h6>
                     </div>
                     <div class="modal-footer">

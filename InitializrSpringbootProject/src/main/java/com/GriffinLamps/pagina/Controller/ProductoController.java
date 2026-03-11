@@ -4,16 +4,21 @@
  */
 package com.GriffinLamps.pagina.Controller;
 
+import com.GriffinLamps.pagina.Domain.Color;
 import com.GriffinLamps.pagina.Domain.Producto;
+import com.GriffinLamps.pagina.Domain.Variante;
 import com.GriffinLamps.pagina.Service.ColeccionService;
 import com.GriffinLamps.pagina.Service.ProductoService;
 import jakarta.validation.Valid;
+import java.math.BigDecimal;
 import java.util.Locale;
 import java.util.Optional;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,12 +49,24 @@ public class ProductoController {
         return "/producto/listado";
     }
     
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.setDisallowedFields("imagenes");
+    }
+    
     @PostMapping("/guardar")
-    public String guardar(@Valid Producto producto, @RequestParam MultipartFile[] imagenes, RedirectAttributes redirectAttributes) {
+    public String guardar(
+            @Valid Producto producto,
+            @RequestParam(value = "imagenesFile", required = false) MultipartFile[] imagenes,
+            RedirectAttributes redirectAttributes) {
 
         productoService.save(producto, imagenes);
-        redirectAttributes.addFlashAttribute("todoOk", messageSource.getMessage("mensaje.actualizado", null, Locale.getDefault()));
+        redirectAttributes.addFlashAttribute("todoOk",
+                messageSource.getMessage("mensaje.actualizado", null, Locale.getDefault()));
 
+        if (producto.getIdProducto() != null) {
+            return "redirect:/producto/modificar/" + producto.getIdProducto();
+        }
         return "redirect:/producto/listado";
     }
     
@@ -81,8 +98,85 @@ public class ProductoController {
             return "redirect:/producto/listado";
         }
         model.addAttribute("producto", productoOpt.get());
-        var categorias = coleccionService.getColecciones();
-        model.addAttribute("categorias", categorias);
+        var colecciones = coleccionService.getColecciones();
+        model.addAttribute("colecciones", colecciones);
         return "/producto/modifica";
+    }
+    
+    @GetMapping("/eliminarImagen/{idImagen}")
+    public String eliminarImagen(@PathVariable Integer idImagen,
+            @RequestParam Integer idProducto,
+            RedirectAttributes redirect) {
+
+        productoService.deleteImagen(idImagen);
+        redirect.addFlashAttribute("mensaje", "Imagen eliminada");
+        return "redirect:/producto/modificar/" + idProducto;
+    }
+    
+    @GetMapping("/agregarVariante/{idProducto}")
+    public String agregarVariante(@PathVariable Integer idProducto) {
+        Variante v = new Variante();
+        v.setTamano("Nueva variante");
+        v.setPrecioExtra(BigDecimal.ZERO);
+        productoService.agregarVariante(idProducto, v);
+        return "redirect:/producto/modificar/" + idProducto;
+    }
+    
+    @GetMapping("/eliminarVariante/{idVariante}")
+    public String eliminarVariante(@PathVariable Integer idVariante,
+            @RequestParam Integer idProducto) {
+
+        productoService.eliminarVariante(idVariante);
+
+        return "redirect:/producto/modificar/" + idProducto;
+    }
+    
+    @GetMapping("/agregarColor/{idProducto}")
+    public String agregarColor(@PathVariable Integer idProducto) {
+        Color c = new Color();
+        c.setNombre("Nuevo color");
+        c.setCodigoHex("#000000");
+        productoService.agregarColor(idProducto, c);
+        return "redirect:/producto/modificar/" + idProducto;
+    }
+    
+    @GetMapping("/eliminarColor/{idColor}")
+    public String eliminarColor(@PathVariable Integer idColor,
+            @RequestParam Integer idProducto) {
+
+        productoService.eliminarColor(idColor);
+
+        return "redirect:/producto/modificar/" + idProducto;
+    }
+    
+    @GetMapping("/editar/{id}")
+    public String editar(@PathVariable Integer id, Model model) {
+
+        Producto producto = productoService.getProducto(id).orElseThrow();
+
+        model.addAttribute("producto", producto);
+        model.addAttribute("colecciones", coleccionService.getColecciones());
+
+        return "/producto/modifica";
+    }
+    
+    @PostMapping("/guardarColor")
+    public String guardarColor(@RequestParam Integer idColor,
+            @RequestParam String nombre,
+            @RequestParam String codigoHex,
+            @RequestParam Integer idProducto,
+            RedirectAttributes redirect) {
+        productoService.actualizarColor(idColor, nombre, codigoHex);
+        return "redirect:/producto/modificar/" + idProducto;
+    }
+
+    @PostMapping("/guardarVariante")
+    public String guardarVariante(@RequestParam Integer idVariante,
+            @RequestParam String tamano,
+            @RequestParam BigDecimal precioExtra,
+            @RequestParam Integer idProducto,
+            RedirectAttributes redirect) {
+        productoService.actualizarVariante(idVariante, tamano, precioExtra);
+        return "redirect:/producto/modificar/" + idProducto;
     }
 }

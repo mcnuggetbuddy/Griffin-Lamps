@@ -5,8 +5,9 @@
 package com.GriffinLamps.pagina.Repository;
 
 import com.GriffinLamps.pagina.Domain.ProductoImagen;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductoImagenRepository extends JpaRepository<ProductoImagen, Integer>{
-    
+    List<ProductoImagen> findByProductoIdProducto(Integer idProducto);
 }

@@ -68,7 +68,7 @@ public class Producto implements Serializable {
     private Coleccion coleccion;
     
     // relación con las imágenes
-    @OneToMany(mappedBy="producto", cascade=CascadeType.ALL, orphanRemoval=true)
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = false) // ✅
     private List<ProductoImagen> imagenes;
 
     // variantes del producto
