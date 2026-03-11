@@ -148,7 +148,7 @@
                                         [[${p.existencias}]]
                                     </td>
                                     <td class="text-end">
-                                        [[${#numbers.formatCurrency(p.precioColones * p.existencias)}]]
+                                        ₡[[${#numbers.formatCurrency(p.precioColones * p.existencias)}]]
                                     </td>
                                     <td>
                                         <img th:if="${p.imagenes != null and !p.imagenes.empty}"
@@ -242,57 +242,57 @@
 
                         <!-- NOMBRE -->
                         <div class="mb-3">
-                            <label>Nombre</label>
+                            <label th:text="#{campo.nombre}"></label>
                             <input type="text" class="form-control" th:field="*{nombre}" required/>
                         </div>
 
                         <!-- DESCRIPCION -->
                         <div class="mb-3">
-                            <label>Descripción</label>
+                            <label th:text="#{campo.descripcion}"></label>
                             <textarea class="form-control" th:field="*{descripcion}"></textarea>
                         </div>
 
                         <!-- PRECIO -->
                         <div class="mb-3">
-                            <label>Precio</label>
+                            <label th:text="#{campo.precio}"></label>
                             <input type="number" class="form-control" th:field="*{precioColones}" required/>
                         </div>
 
                         <!-- EXISTENCIAS -->
                         <div class="mb-3">
-                            <label>Existencias</label>
+                            <label th:text="#{campo.existencias}"></label>
                             <input type="number" class="form-control" th:field="*{existencias}" required/>
                         </div>
 
                         <!-- MATERIAL -->
                         <div class="mb-3">
-                            <label>Material</label>
+                            <label th:text="#{campo.material}"></label>
                             <input type="text" class="form-control" th:field="*{material}" required/>
                         </div>
 
                         <!-- TIPO LUZ -->
                         <div class="mb-3">
-                            <label>Tipo de Luz</label>
+                            <label th:text="#{campo.tipoLuz}"></label>
                             <input type="text" class="form-control" th:field="*{tipoLuz}" required/>
                         </div>
 
                         <!-- TIPO CONEXION -->
                         <div class="mb-3">
-                            <label>Tipo de conexión</label>
+                            <label th:text="#{campo.tipoConexion}"></label>
                             <input type="text" class="form-control" th:field="*{tipoConexion}" required/>
                         </div>
 
                         <!-- DURACION BATERIA -->
                         <div class="mb-3">
-                            <label>Duración batería</label>
+                            <label th:text="#{campo.duracionBateria}"></label>
                             <input type="text" class="form-control" th:field="*{duracionBateria}"/>
                         </div>
 
                         <!-- COLECCION -->
                         <div class="mb-3">
-                            <label>Colección</label>
+                            <label th:text="#{campo.coleccion}"></label>
                             <select class="form-control" th:field="*{coleccion.id}" required>
-                                <option value="">Seleccione colección</option>
+                                <option value="">[[#{campo.coleccion}]]...</option>
                                 <option th:each="c : ${colecciones}"
                                         th:value="${c.id}"
                                         th:text="${c.nombre}">
@@ -303,18 +303,18 @@
                         <!-- ACTIVO -->
                         <div class="form-check mb-2">
                             <input class="form-check-input" type="checkbox" th:field="*{activo}"/>
-                            <label class="form-check-label">Producto activo</label>
+                            <label class="form-check-label" th:text="#{campo.activo}"></label>
                         </div>
 
                         <!-- DESTACADO -->
                         <div class="form-check mb-3">
                             <input class="form-check-input" type="checkbox" th:field="*{destacado}"/>
-                            <label class="form-check-label">Producto destacado</label>
+                            <label class="form-check-label" th:text="#{campo.destacado}"></label>
                         </div>
 
                         <!-- IMAGENES -->
                         <div class="mb-3">
-                            <label>Imágenes</label>
+                            <label th:text="#{campo.imagenes}"></label>
                             <input type="file" name="imagenesFile" multiple class="form-control"/>
                             <div class="mt-3 d-flex flex-wrap">
                                 <div th:each="img : ${producto.imagenes}" class="position-relative me-2 mb-2">
@@ -327,7 +327,7 @@
 
                         <!-- COLORES -->
                         <div class="mb-3">
-                            <label>Colores</label>
+                            <label th:text="#{campo.colores}"></label>
                             <div th:each="c : ${producto.colores}" class="input-group mb-2">
                                 <span class="input-group-text">
                                     <span th:style="'background-color:' + ${c.codigoHex} + ';width:20px;height:20px;display:inline-block;border-radius:3px;'"></span>
@@ -347,12 +347,12 @@
                                    class="btn btn-danger">X</a>
                             </div>
                             <a th:href="@{/producto/agregarColor/{id}(id=${producto.idProducto})}"
-                               class="btn btn-outline-primary btn-sm">Agregar color</a>
+                               class="btn btn-outline-primary btn-sm">[[#{accion.agregar}]] [[#{campo.colores}]]</a>
                         </div>
 
                         <!-- VARIANTES -->
                         <div class="mb-3">
-                            <label>Variantes</label>
+                            <label th:text="#{campo.variantes}"></label>
                             <div th:each="v : ${producto.variantes}" class="input-group mb-2">
                                 <input type="text" class="form-control" th:value="${v.tamano}" readonly/>
                                 <button type="button"
@@ -369,7 +369,7 @@
                                    class="btn btn-danger">X</a>
                             </div>
                             <a th:href="@{/producto/agregarVariante/{id}(id=${producto.idProducto})}"
-                               class="btn btn-outline-primary btn-sm">Agregar variante</a>
+                               class="btn btn-outline-primary btn-sm">[[#{accion.agregar}]] [[#{campo.variantes}]]</a>
                         </div>
 
                     </div>
@@ -387,12 +387,12 @@
                     <input type="hidden" name="idColor" id="colorId"/>
                     <input type="hidden" name="idProducto" id="colorProductoId"/>
                     <div class="modal-header bg-warning text-white">
-                        <h5 class="modal-title">Editar Color</h5>
+                        <h5 class="modal-title">[[#{accion.editar}]] [[#{campo.colores}]]</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label>Nombre</label>
+                            <label th:text="#{campo.nombre}"></label>
                             <input type="text" name="nombre" id="colorNombre" class="form-control" required/>
                         </div>
                         <div class="mb-3">
@@ -402,8 +402,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-warning">Guardar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">[[#{accion.cerrar}]]</button>
+                        <button type="submit" class="btn btn-warning">[[#{accion.guardar}]]</button>
                     </div>
                 </form>
             </div>
@@ -418,23 +418,23 @@
                     <input type="hidden" name="idVariante" id="varianteId"/>
                     <input type="hidden" name="idProducto" id="varianteProductoId"/>
                     <div class="modal-header bg-warning text-white">
-                        <h5 class="modal-title">Editar Variante</h5>
+                        <h5 class="modal-title">[[#{accion.editar}]] [[#{campo.variantes}]]</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label>Tamaño</label>
+                            <label th:text="#{campo.variantes}"></label>
                             <input type="text" name="tamano" id="varianteTamano" class="form-control" required/>
                         </div>
                         <div class="mb-3">
-                            <label>Precio extra</label>
+                            <label th:text="#{campo.precio}"></label>
                             <input type="number" name="precioExtra" id="variantePrecio"
                                    class="form-control" min="0" step="0.01"/>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-warning">Guardar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">[[#{accion.cerrar}]]</button>
+                        <button type="submit" class="btn btn-warning">[[#{accion.guardar}]]</button>
                     </div>
                 </form>
             </div>
