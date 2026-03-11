@@ -5,6 +5,7 @@
 package com.GriffinLamps.pagina.Repository;
 
 import com.GriffinLamps.pagina.Domain.Producto;
+import java.math.BigDecimal;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -15,6 +16,6 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
     
     public List<Producto> findByDestacadoTrue();
 
-//    //Consulta derivada que recupera los producto de un rango de precio y los ordena por precio ascendentemente
-//    public List<Producto> findByPrecioBetweenOrderByPrecioAsc(double precioInf, double precioSup);
+    //Consulta derivada que recupera los producto de un rango de precio y los ordena por precio ascendentemente
+    public List<Producto> findByPrecioColonesBetweenOrderByPrecioColonesAsc(BigDecimal min, BigDecimal max);
 }

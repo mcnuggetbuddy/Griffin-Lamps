@@ -13,6 +13,7 @@ import com.GriffinLamps.pagina.Repository.ProductoImagenRepository;
 import com.GriffinLamps.pagina.Repository.VarianteRepository;
 import com.GriffinLamps.pagina.Repository.ColorRepository;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -131,12 +132,9 @@ public class ProductoService {
         productoImagenRepository.deleteById(idImagen);
     }
                 
-//        @Transactional(readOnly = true)
-//        public List<Producto> consultaDerivada
-//        (double precioInf, double precioSup
-//        
-//            ) {
-//        return productoRepository.findByPrecioBetweenOrderByPrecioAsc(precioInf, precioSup);
-//        }
+        @Transactional(readOnly = true)
+        public List<Producto> consultaDerivada(BigDecimal precioInf, BigDecimal precioSup){
+            return productoRepository.findByPrecioColonesBetweenOrderByPrecioColonesAsc(precioInf, precioSup);
+        }
      
 }

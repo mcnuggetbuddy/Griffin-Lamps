@@ -1,0 +1,60 @@
+<!-- Fragmento#1 para el listado de tarjetas de productos -->
+<section th:fragment="cards" class="py-5 bg-light">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <h2 th:text="#{producto.destacados.titulo}"></h2>
+            <p class="text-muted"
+               th:text="#{producto.destacados.descripcion}">
+            </p>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-3 mb-4"
+                 th:each="p : ${productosDestacados}">
+
+                <div class="card h-100 shadow-sm">
+
+                    <img th:if="${!#lists.isEmpty(p.imagenes)}"
+                         th:src="${p.imagenes[0].rutaImagen}"
+                         class="card-img-top"
+                         th:alt="${p.nombre}">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title"
+                            th:text="${p.nombre}">
+                        </h5>
+
+                        <p class="text-muted"
+                           th:text="${p.coleccion.nombre}">
+                        </p>
+
+                        <p class="fw-bold"
+                           th:text="'₡' + ${#numbers.formatDecimal(p.precioColones,1,2)}">
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="text-center mt-4">
+
+            <a th:href="@{/producto/listado}"
+               class="btn btn-outline-dark">
+
+                <span th:text="#{producto.verTodos}"></span>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>

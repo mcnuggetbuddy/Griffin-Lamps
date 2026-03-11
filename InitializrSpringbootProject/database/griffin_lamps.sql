@@ -215,7 +215,7 @@ VALUES
 
 ('Macaron',
  'Lámpara colgante minimalista con madera natural.',
- 42000, 8, 'Cálida', 'Madera', 'Enchufe', NULL, TRUE, FALSE, 1);
+ 42000, 8, 'Cálida', 'Madera', 'Enchufe', NULL, TRUE, TRUE, 1);
 
  
 -- Variantes
