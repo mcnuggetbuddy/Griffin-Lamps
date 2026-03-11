@@ -75,15 +75,17 @@
                             <input type="text" name="duracionBateria"
                                    class="form-control"/>
                         </div>
-                        <div class="mb-3">
-                            <label>[[#{campo.activo}]]</label>
-                            <input type="checkbox" name="activo"
+                        <div class="mb-3 form-check">
+                            <input type="hidden" name="activo" value="false"/>
+                            <input type="checkbox" name="activo" value="true"
                                    class="form-check-input"/>
+                            <label class="form-check-label">[[#{campo.activo}]]</label>
                         </div>
-                        <div class="mb-3">
-                            <label>[[#{campo.destacado}]]</label>
-                            <input type="checkbox" name="destacado"
+                        <div class="mb-3 form-check">
+                            <input type="hidden" name="destacado" value="false"/>
+                            <input type="checkbox" name="destacado" value="true"
                                    class="form-check-input"/>
+                            <label class="form-check-label">[[#{campo.destacado}]]</label>
                         </div>
                         <div class="mb-3">
                             <label>[[#{campo.imagenes}]]</label>
