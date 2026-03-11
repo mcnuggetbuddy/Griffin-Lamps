@@ -32,8 +32,8 @@
                             <label>[[#{campo.coleccion}]]</label>
                             <select name="coleccion.id" class="form-select">
                                 <option th:each="c : ${colecciones}"
-                                        th:value="${c.id}">
-                                    [[${c.nombre}]]
+                                        th:value="${c.id}"
+                                        th:text="${c.nombre}">
                                 </option>
                             </select>
                         </div>

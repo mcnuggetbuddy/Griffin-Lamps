@@ -20,7 +20,8 @@
                     <img th:if="${!#lists.isEmpty(p.imagenes)}"
                          th:src="${p.imagenes[0].rutaImagen}"
                          class="card-img-top"
-                         th:alt="${p.nombre}">
+                         th:alt="${p.nombre}"
+                         style="width:100%; height:220px; object-fit:cover;"/>
 
                     <div class="card-body">
 

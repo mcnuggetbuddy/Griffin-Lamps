@@ -18,4 +18,11 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
 
     //Consulta derivada que recupera los producto de un rango de precio y los ordena por precio ascendentemente
     public List<Producto> findByPrecioColonesBetweenOrderByPrecioColonesAsc(BigDecimal min, BigDecimal max);
+    
+    List<Producto> findByActivoTrueOrderByPrecioColonesAsc();
+    List<Producto> findByActivoTrueOrderByPrecioColonesDesc();
+    List<Producto> findByActivoTrueOrderByNombreAsc();
+    List<Producto> findByActivoTrueOrderByNombreDesc();
+    List<Producto> findByActivoTrueOrderByIdProductoAsc();
+    List<Producto> findByActivoTrueOrderByIdProductoDesc();
 }

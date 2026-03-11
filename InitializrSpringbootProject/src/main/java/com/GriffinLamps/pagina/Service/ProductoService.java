@@ -192,4 +192,23 @@ public class ProductoService {
         return productoRepository.findByPrecioColonesBetweenOrderByPrecioColonesAsc(precioInf, precioSup);
     }
      
+    @Transactional(readOnly = true)
+    public List<Producto> getProductosOrdenados(String orden) {
+        return switch (orden) {
+            case "precio_asc" ->
+                productoRepository.findByActivoTrueOrderByPrecioColonesAsc();
+            case "precio_desc" ->
+                productoRepository.findByActivoTrueOrderByPrecioColonesDesc();
+            case "nombre_asc" ->
+                productoRepository.findByActivoTrueOrderByNombreAsc();
+            case "nombre_desc" ->
+                productoRepository.findByActivoTrueOrderByNombreDesc();
+            case "nuevo" ->
+                productoRepository.findByActivoTrueOrderByIdProductoDesc();
+            case "viejo" ->
+                productoRepository.findByActivoTrueOrderByIdProductoAsc();
+            default ->
+                productoRepository.findByActivoTrue();
+        };
+    }
 }
