@@ -142,21 +142,24 @@
                                     <td>[[${p.idProducto}]]</td>
                                     <td>[[${p.nombre}]]</td>
                                     <td class="text-end">
-                                        [[${#numbers.formatCurrency(p.precioColones)}]]
+                                        <p th:text="'₡' + ${#numbers.formatDecimal(p.precioColones, 1, 'POINT', 2, 'COMMA')}"></p>
                                     </td>
                                     <td class="text-center">
                                         [[${p.existencias}]]
                                     </td>
                                     <td class="text-end">
-                                        ₡[[${#numbers.formatCurrency(p.precioColones * p.existencias)}]]
+                                        <p th:text="'₡' + ${#numbers.formatDecimal(p.precioColones * p.existencias, 1, 'POINT', 2, 'COMMA')}"></p>
                                     </td>
                                     <td>
-                                        <img th:if="${p.imagenes != null and !p.imagenes.empty}"
-                                             th:src="@{${p.imagenes[0].rutaImagen}}"
-                                             height="75"/>
-                                        <span th:if="${p.imagenes == null or p.imagenes.empty}">
-                                            Sin imagen
-                                        </span>
+                                        <div style="width:75px; height:75px; overflow:hidden; background:#f1f1f1; border-radius:6px;">
+                                            <img th:if="${p.imagenes != null and !p.imagenes.empty}"
+                                                 th:src="${p.imagenes[0].rutaImagen}"
+                                                 style="width:100%; height:100%; object-fit:cover;"/>
+                                            <div th:if="${p.imagenes == null or p.imagenes.empty}"
+                                                 style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+                                                <i class="fas fa-image text-muted"></i>
+                                            </div>
+                                        </div>
                                     </td>
                                     <td>[[${p.coleccion.nombre}]]</td>
                                     <td th:text="${p.activo} ? 'Activa':'Inactiva'"></td>
