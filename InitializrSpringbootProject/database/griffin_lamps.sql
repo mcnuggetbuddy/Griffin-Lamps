@@ -183,7 +183,62 @@ CREATE TABLE detalle_pedido (
 ) ENGINE=InnoDB;
 
 -- =====================================
--- 10) DATOS DE PRUEBA
+-- 10) ROLES
+-- =====================================
+CREATE TABLE rol (
+    id_rol INT AUTO_INCREMENT PRIMARY KEY,
+    rol VARCHAR(20) NOT NULL UNIQUE,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- =====================================
+-- 11) USUARIO
+-- =====================================
+CREATE TABLE usuario (
+    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(30) NOT NULL UNIQUE,
+    password VARCHAR(512) NOT NULL,
+    nombre VARCHAR(20) NOT NULL,
+    apellidos VARCHAR(30) NOT NULL,
+    correo VARCHAR(75) NOT NULL UNIQUE,
+    telefono VARCHAR(25),
+    activo TINYINT(1) DEFAULT 1,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX ndx_username (username)
+);
+
+-- =====================================
+-- 12) USUARIO/ROL
+-- =====================================
+CREATE TABLE usuario_rol (
+    id_usuario INT NOT NULL,
+    id_rol INT NOT NULL,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_usuario, id_rol),
+    CONSTRAINT fk_usuarioRol_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
+    CONSTRAINT fk_usuarioRol_rol FOREIGN KEY (id_rol) REFERENCES rol(id_rol)
+);
+
+-- =====================================
+-- 12) RUTA
+-- =====================================
+CREATE TABLE ruta (
+    id_ruta INT AUTO_INCREMENT NOT NULL,
+    ruta VARCHAR(255) NOT NULL,
+    id_rol INT NULL,
+    requiere_rol boolean NOT NULL DEFAULT TRUE,
+  fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    check (id_rol IS NOT NULL OR requiere_rol = FALSE),
+    PRIMARY KEY (id_ruta),
+    FOREIGN KEY (id_rol) REFERENCES rol(id_rol))
+    ENGINE = InnoDB;
+
+-- =====================================
+-- 14) DATOS DE PRUEBA
 -- =====================================
 
 -- Colecciones
@@ -274,3 +329,62 @@ INSERT INTO pedido (numero_orden, nombre_cliente, correo, telefono, direccion_en
 INSERT INTO detalle_pedido (cantidad, precio_unit, color, talla, pedido_id, producto_id) VALUES
     (1, 35000.00, 'Blanco', 'Pequeño', 1, 1),
     (1, 22000.00, 'Blanco', 'Pequeño', 1, 3);
+
+-- Passwords encriptados con BCrypt (valor plano entre comentarios)
+INSERT INTO usuario (username, password, nombre, apellidos, correo, telefono, activo) VALUES
+('admin', '$2a$10$2VQ7xa2DlcRgOTpQT9/yO.TDj.ZSUxGXe7jB8svrvbXvYMInvgGiu', 'Logan', 'Griffin', 'admin@griffinlamps.com', '8800-0001', 1),
+('vendedor', '$2a$10$e.ej2/1B.G8ccd43UAJX/uIxP7zt7CKXeKJO8ckKksGd.a04yCVgu', 'Lucy', 'Griffin', 'vendedor@griffinlamps.com', '8800-0002', 1),
+('cliente', '$2a$10$9UHIGSJBftTSHNnYDEW.QO2009a2HlqxZOf5bCgdG3fifEo9L/kZC', 'Carlos', 'Mora', 'carlos.mora@gmail.com', '8800-0003', 1);
+
+-- Roles
+INSERT INTO rol (rol) VALUES
+('ADMIN'),
+('VENDEDOR'),
+('CLIENTE');
+
+-- Usuario/Roles
+INSERT INTO usuario_rol (id_usuario, id_rol) VALUES
+(1, 1),
+(2, 2),
+(3, 3);
+
+-- Inserción de rutas con roles específicos
+INSERT INTO ruta (ruta, id_rol) VALUES 
+('/producto/nuevo', 1),
+('/producto/guardar', 1),
+('/producto/modificar/**', 1),
+('/producto/eliminar/**', 1),
+('/coleccion/nuevo', 1),
+('/coleccion/guardar', 1),
+('/coleccion/modificar/**', 1),
+('/coleccion/eliminar/**', 1),
+('/usuario/**', 1),
+('/constante/**', 1),
+('/role/**', 1),
+('/usuario_role/**', 1),
+('/ruta/**', 1),
+('/producto/listado', 2),
+('/coleccion/listado', 2),
+('/pruebas/**', 2),
+('/reportes/**', 2),
+('/paypal/**', 3),
+('/facturar/carrito', 3);
+
+-- Rutas públicas
+INSERT INTO ruta (ruta, requiere_rol) VALUES
+('/',           false),
+('/listado',    false),
+('/colecciones',false),
+('/nosotros',   false),
+('/login',      false),
+('/errores/**', false),
+('/403',        false),
+('/fav/**',     false),
+('/js/**',      false),
+('/css/**',     false),
+('/img/**',     false),
+('/logo/**',    false),
+('/webjars/**', false),
+('/cliente/**', false),
+('/nosotros',   false),
+('/about/**',   false);

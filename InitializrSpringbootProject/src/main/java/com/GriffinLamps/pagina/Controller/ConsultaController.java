@@ -4,6 +4,7 @@ import com.GriffinLamps.pagina.Service.ProductoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Controller
@@ -31,4 +32,23 @@ public class ConsultaController {
         return "/consultas/listado";
     }
     
+    @GetMapping("/cliente/productos")
+    public String productos(Model model,
+            @RequestParam(value = "orden", defaultValue = "nuevo") String orden) {
+        var productos = productoService.getProductosOrdenados(orden);
+        model.addAttribute("productos", productos);
+        model.addAttribute("orden", orden);
+        return "cliente/productos";
+    }
+
+    @GetMapping("/cliente/colecciones")
+    public String colecciones(Model model) {
+        // cuando tengas ColeccionService
+        return "cliente/colecciones";
+    }
+
+    @GetMapping("/nosotros")
+    public String nosotros() {
+        return "about/listado";
+    }
 }
