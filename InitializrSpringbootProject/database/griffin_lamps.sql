@@ -332,9 +332,9 @@ INSERT INTO detalle_pedido (cantidad, precio_unit, color, talla, pedido_id, prod
 
 -- Passwords encriptados con BCrypt (valor plano entre comentarios)
 INSERT INTO usuario (username, password, nombre, apellidos, correo, telefono, activo) VALUES
-('admin', '$2a$10$2VQ7xa2DlcRgOTpQT9/yO.TDj.ZSUxGXe7jB8svrvbXvYMInvgGiu', 'Logan', 'Griffin', 'admin@griffinlamps.com', '8800-0001', 1),
-('vendedor', '$2a$10$e.ej2/1B.G8ccd43UAJX/uIxP7zt7CKXeKJO8ckKksGd.a04yCVgu', 'Lucy', 'Griffin', 'vendedor@griffinlamps.com', '8800-0002', 1),
-('cliente', '$2a$10$9UHIGSJBftTSHNnYDEW.QO2009a2HlqxZOf5bCgdG3fifEo9L/kZC', 'Carlos', 'Mora', 'carlos.mora@gmail.com', '8800-0003', 1);
+('admin', '$2a$10$GwB3kpHuVkomn/wSEFRfDuZZuRBzdj2fFGuQ74tvtBr7ScbZsuWhu', 'Logan', 'Griffin', 'admin@griffinlamps.com', '8800-0001', 1),
+('vendedor', '$2a$10$X/2patfnA.gvpi.KETr/C.XbX/p2E5w.jOJTXS1Wdi0b7DXhcNgHu', 'Lucy', 'Griffin', 'vendedor@griffinlamps.com', '8800-0002', 1),
+('cliente', '$2a$10$2MYmATGmhrUAmvMzDa344OnGm8.CkFICWZima0MRErE.Xlmct8R46', 'Carlos', 'Mora', 'carlos.mora@gmail.com', '8800-0003', 1);
 
 -- Roles
 INSERT INTO rol (rol) VALUES
@@ -363,7 +363,7 @@ INSERT INTO ruta (ruta, id_rol) VALUES
 ('/role/**', 1),
 ('/usuario_role/**', 1),
 ('/ruta/**', 1),
-('/producto/listado', 2),
+('/producto/listado/**', 1),
 ('/coleccion/listado', 2),
 ('/pruebas/**', 2),
 ('/reportes/**', 2),
@@ -373,7 +373,6 @@ INSERT INTO ruta (ruta, id_rol) VALUES
 -- Rutas públicas
 INSERT INTO ruta (ruta, requiere_rol) VALUES
 ('/',           false),
-('/listado',    false),
 ('/colecciones',false),
 ('/nosotros',   false),
 ('/login',      false),
@@ -386,5 +385,6 @@ INSERT INTO ruta (ruta, requiere_rol) VALUES
 ('/logo/**',    false),
 ('/webjars/**', false),
 ('/cliente/**', false),
+('/registro/**',   false),
 ('/nosotros',   false),
 ('/about/**',   false);

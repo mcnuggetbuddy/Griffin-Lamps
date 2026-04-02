@@ -5,7 +5,7 @@
             <div class="card h-100 shadow-sm">
 
                 <!-- IMAGEN -->
-                <a th:href="@{/producto/{id}(id=${p.idProducto})}">
+                <a th:href="@{/cliente/detalle/{id}(id=${p.idProducto})}">
                     <div style="aspect-ratio:1/1; overflow:hidden; background:#f5f5f5;">
                         <img th:if="${!#lists.isEmpty(p.imagenes)}"
                              th:src="${p.imagenes[0].rutaImagen}"
@@ -42,7 +42,7 @@
                               class="badge text-bg-danger ms-2">[[#{estado.agotado}]]</span>
                     </div>
                     <div class="d-flex gap-2">
-                        <a th:href="@{/producto/{id}(id=${p.idProducto})}"
+                        <a th:href="@{/cliente/detalle/{id}(id=${p.idProducto})}"
                            class="btn btn-sm btn-outline-dark">
                             <i class="fas fa-eye"></i>
                         </a>
@@ -67,3 +67,157 @@
         <p class="text-muted">[[#{lista.vacia}]]</p>
     </div>
 </section>
+
+<!-- fragmento 3: Detalle de producto individual para detalle.html -->
+<section th:fragment="detalle" class="container py-5" th:attr="data-producto-id=${producto.idProducto}">
+
+    <!-- Botón regresar -->
+    <a th:href="@{/cliente/productos}" class="btn btn-outline-secondary btn-sm mb-4">
+        <i class="fas fa-arrow-left me-1"></i>[[#{accion.regresar}]]
+    </a>
+
+    <div class="row g-5">
+
+        <!-- Columna izquierda: galería de imágenes -->
+        <div class="col-lg-6">
+            <!-- Imagen principal -->
+            <div style="aspect-ratio:1/1; overflow:hidden; background:#f5f5f5; border-radius:8px;" class="mb-3">
+                <img th:if="${!#lists.isEmpty(producto.imagenes)}"
+                     th:src="${producto.imagenes[0].rutaImagen}"
+                     th:alt="${producto.nombre}"
+                     id="imagenPrincipal"
+                     style="width:100%; height:100%; object-fit:cover;"/>
+                <div th:if="${#lists.isEmpty(producto.imagenes)}"
+                     style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+                    <i class="fas fa-image fa-5x text-muted"></i>
+                </div>
+            </div>
+            <!-- Miniaturas -->
+            <div th:if="${producto.imagenes.size() gt 1}" class="d-flex gap-2 flex-wrap">
+                <div th:each="img : ${producto.imagenes}"
+                     style="width:72px; height:72px; overflow:hidden; border-radius:6px; cursor:pointer; border:2px solid transparent;"
+                     class="miniatura"
+                     onclick="document.getElementById('imagenPrincipal').src=this.querySelector('img').src">
+                    <img th:src="${img.rutaImagen}"
+                         th:alt="${producto.nombre}"
+                         style="width:100%; height:100%; object-fit:cover;"/>
+                </div>
+            </div>
+        </div>
+
+        <!-- Columna derecha: información -->
+        <div class="col-lg-6">
+
+            <!-- Nombre y colección -->
+            <p class="text-muted mb-1" th:text="${producto.coleccion.nombre}"></p>
+            <h2 class="fw-bold mb-3" th:text="${producto.nombre}"></h2>
+
+            <!-- Precio -->
+            <p class="h4 text-success mb-4"
+               th:text="'₡' + ${#numbers.formatDecimal(producto.precioColones, 1, 'POINT', 2, 'COMMA')}"></p>
+
+            <!-- Descripción -->
+            <p class="mb-4" th:text="${producto.descripcion}"></p>
+
+            <!-- Especificaciones técnicas -->
+            <table class="table table-sm table-borderless mb-4">
+                <tbody>
+                    <tr>
+                        <th scope="row" class="text-muted ps-0" style="width:40%" th:text="#{campo.tipoLuz}"></th>
+                        <td th:text="${producto.tipoLuz}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="text-muted ps-0" th:text="#{campo.material}"></th>
+                        <td th:text="${producto.material}"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="text-muted ps-0" th:text="#{campo.tipoConexion}"></th>
+                        <td th:text="${producto.tipoConexion}"></td>
+                    </tr>
+                    <tr th:if="${producto.duracionBateria != null and !#strings.isEmpty(producto.duracionBateria)}">
+                        <th scope="row" class="text-muted ps-0" th:text="#{campo.duracionBateria}"></th>
+                        <td th:text="${producto.duracionBateria}"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Colores -->
+            <div th:if="${!#lists.isEmpty(producto.colores)}" class="mb-4">
+                <p class="fw-semibold mb-2" th:text="#{campo.colores}"></p>
+                <div class="d-flex gap-2 flex-wrap" id="coloresGroup">
+                    <button type="button"
+                            th:each="c : ${producto.colores}"
+                            th:attr="data-id=${c.idColor}, data-nombre=${c.nombre}"
+                            th:style="'width:34px; height:34px; border-radius:50%; background:' + ${c.codigoHex} + '; border:3px solid transparent; box-shadow:0 0 0 1px #ccc; cursor:pointer;'"
+                            class="color-btn p-0">
+                    </button>
+                </div>
+                <small id="detalleColorNombre" class="text-muted mt-2 d-block"></small>
+            </div>
+
+            <!-- Variantes -->
+            <div th:if="${!#lists.isEmpty(producto.variantes)}" class="mb-4">
+                <p class="fw-semibold mb-2" th:text="#{campo.variantes}"></p>
+                <div class="d-flex gap-2 flex-wrap" id="variantesGroup">
+                    <button type="button"
+                            th:each="v : ${producto.variantes}"
+                            th:attr="data-id=${v.idVariante}"
+                            class="variante-btn btn btn-outline-dark btn-sm">
+                        <span th:text="${v.tamano}"></span>
+                        <span th:if="${v.precioExtra != null and v.precioExtra.signum() gt 0}"
+                              class="ms-1"
+                              th:text="'(+' + ${#numbers.formatDecimal(v.precioExtra, 1, 'POINT', 2, 'COMMA')} + ')'"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Agregar al carrito -->
+            <form th:action="@{/carrito/agregar}" method="POST">
+                <input type="hidden" th:value="${producto.idProducto}" name="idProducto"/>
+                <input type="hidden" id="inputColor"    name="idColor"    value=""/>
+                <input type="hidden" id="inputVariante" name="idVariante" value=""/>
+                <button type="submit"
+                        class="btn btn-dark w-100"
+                        th:disabled="${producto.existencias == 0}">
+                    <i class="fas fa-cart-plus me-2"></i>
+                    <span th:if="${producto.existencias > 0}">[[#{buscar.boton}]]</span>
+                    <span th:unless="${producto.existencias > 0}">[[#{estado.agotado}]]</span>
+                </button>
+            </form>
+
+        </div>
+    </div>
+</section>
+
+<!-- fragmento 2: Barra de filtros/ordenamiento para productos.html -->
+<div th:fragment="filtros" class="container pt-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h4 class="mb-0" th:text="#{listado.titulo}"></h4>
+        <form method="get" th:action="@{/cliente/productos}">
+            <div class="input-group">
+                <label class="input-group-text" for="ordenSelect" th:text="#{listado.ordenar}"></label>
+                <select id="ordenSelect" name="orden" class="form-select"
+                        onchange="this.form.submit()">
+                    <option value="nombre_asc"
+                            th:selected="${orden == 'nombre_asc'}"
+                            th:text="#{listado.orden.nombreAsc}"></option>
+                    <option value="nombre_desc"
+                            th:selected="${orden == 'nombre_desc'}"
+                            th:text="#{listado.orden.nombreDesc}"></option>
+                    <option value="nuevo"
+                            th:selected="${orden == 'nuevo'}"
+                            th:text="#{listado.orden.nuevo}"></option>
+                    <option value="viejo"
+                            th:selected="${orden == 'viejo'}"
+                            th:text="#{listado.orden.viejo}"></option>
+                    <option value="precio_asc"
+                            th:selected="${orden == 'precio_asc'}"
+                            th:text="#{listado.orden.precioAsc}"></option>
+                    <option value="precio_desc"
+                            th:selected="${orden == 'precio_desc'}"
+                            th:text="#{listado.orden.precioDesc}"></option>
+                </select>
+            </div>
+        </form>
+    </div>
+</div>

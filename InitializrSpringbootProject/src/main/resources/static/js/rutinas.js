@@ -55,3 +55,57 @@ document.addEventListener('DOMContentLoaded', function () {
 setTimeout(() => {
     document.querySelectorAll('.toast').forEach(t => t.classList.remove('show'));
 }, 4000);
+
+// Selección de Color y Variante en /cliente/detalle
+document.addEventListener('DOMContentLoaded', function () {
+    const section = document.querySelector('section[data-producto-id]');
+    if (!section) return;
+
+    const pid = section.getAttribute('data-producto-id');
+    const KC  = 'gl-color-'    + pid;
+    const KV  = 'gl-variante-' + pid;
+
+    function selectColor(btn) {
+        document.querySelectorAll('.color-btn').forEach(function (b) {
+            b.style.border    = '3px solid transparent';
+            b.style.boxShadow = '0 0 0 1px #ccc';
+        });
+        btn.style.border    = '3px solid #212529';
+        btn.style.boxShadow = '0 0 0 3px #212529';
+        const label = document.getElementById('detalleColorNombre');
+        if (label) label.textContent = btn.dataset.nombre;
+        const input = document.getElementById('inputColor');
+        if (input) input.value = btn.dataset.id;
+        sessionStorage.setItem(KC, btn.dataset.id);
+    }
+
+    function selectVariante(btn) {
+        document.querySelectorAll('.variante-btn').forEach(function (b) {
+            b.classList.remove('btn-dark');
+            b.classList.add('btn-outline-dark');
+        });
+        btn.classList.remove('btn-outline-dark');
+        btn.classList.add('btn-dark');
+        const input = document.getElementById('inputVariante');
+        if (input) input.value = btn.dataset.id;
+        sessionStorage.setItem(KV, btn.dataset.id);
+    }
+
+    document.querySelectorAll('.color-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () { selectColor(this); });
+    });
+    document.querySelectorAll('.variante-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () { selectVariante(this); });
+    });
+
+    const sc = sessionStorage.getItem(KC);
+    if (sc) {
+        const cb = document.querySelector('.color-btn[data-id="' + sc + '"]');
+        if (cb) selectColor(cb);
+    }
+    const sv = sessionStorage.getItem(KV);
+    if (sv) {
+        const vb = document.querySelector('.variante-btn[data-id="' + sv + '"]');
+        if (vb) selectVariante(vb);
+    }
+});

@@ -25,4 +25,7 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
     List<Producto> findByActivoTrueOrderByNombreDesc();
     List<Producto> findByActivoTrueOrderByIdProductoAsc();
     List<Producto> findByActivoTrueOrderByIdProductoDesc();
+
+    // Búsqueda por nombre (insensible a mayúsculas)
+    List<Producto> findByActivoTrueAndNombreContainingIgnoreCase(String nombre);
 }

@@ -193,6 +193,11 @@ public class ProductoService {
     }
      
     @Transactional(readOnly = true)
+    public List<Producto> buscarProductos(String buscar) {
+        return productoRepository.findByActivoTrueAndNombreContainingIgnoreCase(buscar);
+    }
+
+    @Transactional(readOnly = true)
     public List<Producto> getProductosOrdenados(String orden) {
         return switch (orden) {
             case "precio_asc" ->

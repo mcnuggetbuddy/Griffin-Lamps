@@ -30,6 +30,8 @@ public class SecurityConfig {
         var rutas = rutaService.getRutas();
 
         http.authorizeHttpRequests(requests -> {
+            requests.requestMatchers("/cliente/**").permitAll();
+            requests.requestMatchers("/acceso_denegado").permitAll();
             for (Ruta ruta : rutas) {
                 if (ruta.isRequiereRol()) {
                     requests.requestMatchers(ruta.getRuta()).hasRole(ruta.getRol().getRol());
