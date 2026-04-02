@@ -14,7 +14,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class UsuarioService {
@@ -68,7 +67,7 @@ public class UsuarioService {
     }
 
     @Transactional
-    public void save(Usuario usuario, MultipartFile imagenFile, boolean encriptaClave) {
+    public void save(Usuario usuario, boolean encriptaClave) {
         // Verificar si el correo ya existe, excluyendo el usuario actual        
         final Integer idUser = usuario.getIdUsuario();
         Optional<Usuario> usuarioDuplicado = usuarioRepository.findByUsernameOrCorreo(null, usuario.getCorreo());
@@ -108,7 +107,7 @@ public class UsuarioService {
         usuario = usuarioRepository.save(usuario);
         if (asignarRol) {
             //Si se está creando el usuario, se crea el rol por defecto "USER"
-            asignarRolPorUsername(usuario.getUsername(), "USER");
+            asignarRolPorUsername(usuario.getUsername(), "CLIENTE");
         }
     }
 

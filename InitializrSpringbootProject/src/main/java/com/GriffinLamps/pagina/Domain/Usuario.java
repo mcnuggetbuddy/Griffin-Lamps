@@ -27,11 +27,10 @@ public class Usuario implements Serializable {
     private String apellidos;
     private String correo;
     private String telefono;
-    private String rutaImagen;
     private boolean activo;
 
     // Relación Many-to-Many con la entidad Rol
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "usuario_rol",
             joinColumns = @JoinColumn(name = "id_usuario"),

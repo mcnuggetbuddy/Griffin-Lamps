@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -46,7 +45,6 @@ public class UsuarioController {
     @PostMapping("/guardar")
     public String guardar(@Valid Usuario usuario,
             BindingResult bindingResult,
-            @RequestParam MultipartFile imagenFile,
             RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             // Redirige al formulario de edición/creación para mostrar errores
@@ -59,7 +57,7 @@ public class UsuarioController {
             // Si hay idUsuario, redirige al formulario de modificación
             return "redirect:/usuario/modificar/" + usuario.getIdUsuario();
         }
-        usuarioService.save(usuario, imagenFile, true);
+        usuarioService.save(usuario, true);
         redirectAttributes.addFlashAttribute("todoOk",
                 messageSource.getMessage("mensaje.actualizado",
                         null, Locale.getDefault()));
