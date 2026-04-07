@@ -1,14 +1,14 @@
 <!-- Fragmento #1 Hero Section del about-->
 <section th:fragment="hero" class="about-hero">
-    <div class="container col-xxl-8 px-4 py-5">
-        <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
-            <div class="col-10 col-sm-8 col-lg-6">
-            </div>
-            <div class="col-lg-6">
-                <h1 class="display-5 fw-bold text-white lh-1 mb-3">[[#{plantilla.hero.titulo}]]</h1>
-                <p class="lead text-white">[[#{plantilla.hero.texto}]]</p>
-                <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                </div>
+    <div class="container py-5">
+        <div class="row align-items-center min-vh-50">
+            <div class="col-lg-7">
+                <h1 class="display-4 fw-light text-white mb-4">
+                    [[#{plantilla.hero.titulo}]]
+                </h1>
+                <p class="lead text-white">
+                    [[#{plantilla.hero.texto}]]
+                </p>
             </div>
         </div>
     </div>
@@ -16,10 +16,10 @@
 
 <!-- Fragmento: Página Nosotros -->
 <section th:fragment="nosotros" class="py-5">
-    <div class="container" style="max-width: 900px;">
+    <div class="container" style="max-width: 1100px;">
 
         <!-- NUESTRA HISTORIA -->
-        <div class="mb-5">
+        <div class="mb-5 text-center">
             <h2 class="fw-light mb-4">[[#{nosotros.historia.titulo}]]</h2>
             <p class="text-muted fs-5 lh-lg">[[#{nosotros.historia.p1}]]</p>
             <p class="text-muted fs-5 lh-lg">[[#{nosotros.historia.p2}]]</p>
@@ -28,74 +28,63 @@
         <!-- IMÁGENES -->
         <div class="row g-4 mb-5">
             <div class="col-md-6">
-                <div style="aspect-ratio:1/1; overflow:hidden; background:#f1f1f1; border-radius:12px;">
-                    <img src="/img/Logan.jpg"
+                <div class="about-img">
+                    <img src="/img/Logan.JPG"
                          alt="Griffin Lamps Design"
-                         style="width:100%; height:100%; object-fit:cover;"/>
+                         class="img-fluid"/>
                 </div>
             </div>
             <div class="col-md-6">
-                <div style="aspect-ratio:1/1; overflow:hidden; background:#f1f1f1; border-radius:12px;">
+                <div class="about-img offset-img">
                     <img src="/img/Lucy.jpg"
                          alt="Griffin Lamps Collection"
-                         style="width:100%; height:100%; object-fit:cover;"/>
+                         class="img-fluid"/>
                 </div>
             </div>
         </div>
 
         <!-- NUESTROS VALORES -->
-        <div class="mb-5">
+        <div class="mb-5 text-center">
             <h2 class="fw-light mb-4">[[#{nosotros.valores.titulo}]]</h2>
             <div class="row g-4">
                 <div class="col-md-4">
-                    <h5 class="fw-semibold mb-2">[[#{nosotros.valores.diseno.titulo}]]</h5>
-                    <p class="text-muted">[[#{nosotros.valores.diseno.texto}]]</p>
+                    <div class="about-card">
+                        <h5 class="fw-semibold mb-2">[[#{nosotros.valores.diseno.titulo}]]</h5>
+                        <p class="text-muted">[[#{nosotros.valores.diseno.texto}]]</p>
+                    </div>
                 </div>
                 <div class="col-md-4">
-                    <h5 class="fw-semibold mb-2">[[#{nosotros.valores.calidad.titulo}]]</h5>
-                    <p class="text-muted">[[#{nosotros.valores.calidad.texto}]]</p>
+                    <div class="about-card">
+                        <h5 class="fw-semibold mb-2">[[#{nosotros.valores.calidad.titulo}]]</h5>
+                        <p class="text-muted">[[#{nosotros.valores.calidad.texto}]]</p>
+                    </div>
                 </div>
                 <div class="col-md-4">
-                    <h5 class="fw-semibold mb-2">[[#{nosotros.valores.servicio.titulo}]]</h5>
-                    <p class="text-muted">[[#{nosotros.valores.servicio.texto}]]</p>
+                    <div class="about-card">
+                        <h5 class="fw-semibold mb-2">[[#{nosotros.valores.servicio.titulo}]]</h5>
+                        <p class="text-muted">[[#{nosotros.valores.servicio.texto}]]</p>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- NUESTRAS COLECCIONES -->
-        <div class="mb-5">
+        <div class="mb-5 text-center">
             <h2 class="fw-light mb-4">[[#{nosotros.colecciones.titulo}]]</h2>
-            <p class="text-muted mb-3">[[#{nosotros.colecciones.intro}]]</p>
-            <ul class="list-unstyled text-muted ps-3">
-                <li class="mb-2">
-                    <i class="fas fa-circle fa-xs me-2 text-secondary"></i>
-                    <strong>Classic Collection:</strong> [[#{nosotros.colecciones.classic}]]
-                </li>
-                <li class="mb-2">
-                    <i class="fas fa-circle fa-xs me-2 text-secondary"></i>
-                    <strong>Contemporary Collection:</strong> [[#{nosotros.colecciones.contemporary}]]
-                </li>
-                <li class="mb-2">
-                    <i class="fas fa-circle fa-xs me-2 text-secondary"></i>
-                    <strong>Japanese Collection:</strong> [[#{nosotros.colecciones.japanese}]]
-                </li>
-                <li class="mb-2">
-                    <i class="fas fa-circle fa-xs me-2 text-secondary"></i>
-                    <strong>Ambient Collection:</strong> [[#{nosotros.colecciones.ambient}]]
-                </li>
-                <li class="mb-2">
-                    <i class="fas fa-circle fa-xs me-2 text-secondary"></i>
-                    <strong>Modern Collection:</strong> [[#{nosotros.colecciones.modern}]]
-                </li>
-                <li class="mb-2">
-                    <i class="fas fa-circle fa-xs me-2 text-secondary"></i>
-                    <strong>Nature Collection:</strong> [[#{nosotros.colecciones.nature}]]
-                </li>
-            </ul>
+            <p class="text-muted mb-4">[[#{nosotros.colecciones.intro}]]</p>
+
+            <div class="d-flex flex-wrap justify-content-center gap-2">
+                <span class="about-chip">Classic</span>
+                <span class="about-chip">Contemporary</span>
+                <span class="about-chip">Japanese</span>
+                <span class="about-chip">Ambient</span>
+                <span class="about-chip">Modern</span>
+                <span class="about-chip">Nature</span>
+            </div>
         </div>
 
         <!-- CONECTATE -->
-        <div class="text-center bg-light rounded-4 p-5">
+        <div class="text-center about-cta">
             <h2 class="fw-light mb-3">[[#{nosotros.instagram.titulo}]]</h2>
             <p class="text-muted mb-4 mx-auto" style="max-width:560px;">
                 [[#{nosotros.instagram.texto}]]
