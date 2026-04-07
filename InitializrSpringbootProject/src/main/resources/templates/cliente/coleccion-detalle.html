@@ -5,7 +5,8 @@
     <body>
         <header th:replace="~{general/fragmentos :: header}"/>
 
-        <section th:replace="~{cliente/fragmentos :: tarjetasColecciones}"/>
+        <div th:replace="~{cliente/fragmentos :: encabezadoColeccion}"/>
+        <section th:replace="~{cliente/fragmentos :: tarjetas}"/>
 
         <footer th:replace="~{general/fragmentos :: footer}"/>
     </body>

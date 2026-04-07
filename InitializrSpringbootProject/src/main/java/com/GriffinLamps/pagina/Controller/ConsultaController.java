@@ -1,5 +1,6 @@
 package com.GriffinLamps.pagina.Controller;
 
+import com.GriffinLamps.pagina.Service.ColeccionService;
 import com.GriffinLamps.pagina.Service.ProductoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,11 +11,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ConsultaController {
-    
-    private final ProductoService productoService;
 
-    public ConsultaController(ProductoService productoService) {
+    private final ProductoService productoService;
+    private final ColeccionService coleccionService;
+
+    public ConsultaController(ProductoService productoService, ColeccionService coleccionService) {
         this.productoService = productoService;
+        this.coleccionService = coleccionService;
     }
     
     @GetMapping("/")
@@ -58,8 +61,19 @@ public class ConsultaController {
 
     @GetMapping("/cliente/colecciones")
     public String colecciones(Model model) {
-        // cuando tengas ColeccionService
+        model.addAttribute("colecciones", coleccionService.getColecciones());
         return "cliente/colecciones";
+    }
+
+    @GetMapping("/cliente/colecciones/{idColeccion}")
+    public String coleccionDetalle(@PathVariable Integer idColeccion, Model model) {
+        var coleccionOpt = coleccionService.getColeccion(idColeccion);
+        if (coleccionOpt.isEmpty()) {
+            return "redirect:/cliente/colecciones";
+        }
+        model.addAttribute("coleccion", coleccionOpt.get());
+        model.addAttribute("productos", productoService.getProductosActivosPorColeccion(idColeccion));
+        return "cliente/coleccion-detalle";
     }
 
     @GetMapping("/nosotros")

@@ -52,6 +52,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>[[#{coleccion.imagen}]]</th>
                                     <th>[[#{coleccion.nombre}]]</th>
                                     <th>[[#{coleccion.fechaCreacion}]]</th>
                                     <th></th>
@@ -60,6 +61,13 @@
                             <tbody>
                                 <tr th:each="c : ${colecciones}">
                                     <td>[[${c.id}]]</td>
+                                    <td>
+                                        <img th:if="${c.imagen != null}"
+                                             th:src="${c.imagen}"
+                                             th:alt="${c.nombre}"
+                                             style="width:48px; height:48px; object-fit:cover; border-radius:4px;"/>
+                                        <i th:unless="${c.imagen != null}" class="fas fa-image text-muted"></i>
+                                    </td>
                                     <td>[[${c.nombre}]]</td>
                                     <td>[[${#dates.format(c.fechaCreacion, 'dd/MM/yyyy HH:mm')}]]</td>
                                     <td>
@@ -99,7 +107,8 @@
         <div class="col-md-2"></div>
         <div class="col-md-8">
             <form method="POST" th:action="@{/colecciones/guardar}"
-                  th:object="${coleccion}" class="was-validated">
+                  th:object="${coleccion}" class="was-validated"
+                  enctype="multipart/form-data">
                 <input type="hidden" th:field="*{id}"/>
                 <div class="row py-4 mb-4 bg-light">
                     <div class="col-md-4 d-grid">
@@ -124,6 +133,15 @@
                                     <label for="nombre">[[#{coleccion.nombre}]]</label>
                                     <input type="text" class="form-control"
                                            th:field="*{nombre}" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label>[[#{coleccion.imagen}]]</label>
+                                    <div th:if="${coleccion.imagen != null}" class="mb-2">
+                                        <img th:src="${coleccion.imagen}"
+                                             th:alt="${coleccion.nombre}"
+                                             style="height:120px; object-fit:cover; border-radius:6px;"/>
+                                    </div>
+                                    <input type="file" name="imagenFile" class="form-control" accept="image/*"/>
                                 </div>
                                 <div class="mb-3">
                                     <label>[[#{coleccion.fechaCreacion}]]</label>

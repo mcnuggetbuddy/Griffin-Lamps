@@ -51,7 +51,34 @@ public class FirebaseStorageService {
             }
         }
     }
-    
+
+    public String uploadColeccionImage(MultipartFile localFile, Integer id) throws IOException {
+        String originalName = localFile.getOriginalFilename();
+        String fileExtension = "";
+        String baseName = "imagen";
+
+        if (originalName != null && originalName.contains(".")) {
+            fileExtension = originalName.substring(originalName.lastIndexOf("."));
+            baseName = originalName.substring(0, originalName.lastIndexOf("."));
+        }
+
+        String fileName = baseName + fileExtension;
+        File tempFile = convertToFile(localFile);
+        try {
+            BlobId blobId = BlobId.of(bucketName, storagePath + "/colecciones/" + id + "/" + fileName);
+            String mimeType = Files.probeContentType(tempFile.toPath());
+            BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
+                    .setContentType(mimeType != null ? mimeType : "media")
+                    .build();
+            storage.create(blobInfo, Files.readAllBytes(tempFile.toPath()));
+            return storage.signUrl(blobInfo, 1825, TimeUnit.DAYS).toString();
+        } finally {
+            if (tempFile.exists()) {
+                tempFile.delete();
+            }
+        }
+    }
+
     public void deleteImage(String signedUrl) {
         try {
             String path = signedUrl.split("\\?")[0];

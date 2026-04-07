@@ -216,4 +216,9 @@ public class ProductoService {
                 productoRepository.findByActivoTrue();
         };
     }
+    
+    @Transactional(readOnly = true)
+    public List<Producto> getProductosActivosPorColeccion(Integer coleccionId) {
+        return productoRepository.findByActivoTrueAndColeccionIdOrderByNombreAsc(coleccionId);
+    }
 }

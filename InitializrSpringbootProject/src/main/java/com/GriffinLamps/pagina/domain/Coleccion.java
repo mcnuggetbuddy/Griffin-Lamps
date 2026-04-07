@@ -26,6 +26,9 @@ public class Coleccion implements Serializable {
     @Size(max = 1024)
     private String nombre;
 
+    @Column(length = 2048)
+    private String imagen;
+
     @Column(name = "fecha_creacion", insertable = false, updatable = false)
     private Timestamp fechaCreacion;
 
