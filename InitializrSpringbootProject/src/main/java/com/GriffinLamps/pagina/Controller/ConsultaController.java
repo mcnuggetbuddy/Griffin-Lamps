@@ -1,20 +1,23 @@
 package com.GriffinLamps.pagina.Controller;
 
+import com.GriffinLamps.pagina.Service.ColeccionService;
 import com.GriffinLamps.pagina.Service.ProductoService;
+import java.util.Collections;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 @Controller
 public class ConsultaController {
     
     private final ProductoService productoService;
+    private final ColeccionService coleccionService;
 
-    public ConsultaController(ProductoService productoService) {
+    public ConsultaController(ProductoService productoService, ColeccionService coleccionService) {
         this.productoService = productoService;
+        this.coleccionService = coleccionService;
     }
     
     @GetMapping("/")
@@ -57,8 +60,25 @@ public class ConsultaController {
     }
 
     @GetMapping("/cliente/colecciones")
-    public String colecciones(Model model) {
-        // cuando tengas ColeccionService
+    public String colecciones(
+            @RequestParam(value = "coleccionId", required = false) Integer coleccionId,
+            Model model) {
+
+        var colecciones = coleccionService.getColecciones();
+
+        Integer coleccionActiva = coleccionId;
+        if (coleccionActiva == null && !colecciones.isEmpty()) {
+            coleccionActiva = colecciones.get(0).getId();
+        }
+
+        var productos = (coleccionActiva != null)
+                ? productoService.getProductosActivosPorColeccion(coleccionActiva)
+                : Collections.emptyList();
+
+        model.addAttribute("colecciones", colecciones);
+        model.addAttribute("coleccionActiva", coleccionActiva);
+        model.addAttribute("productos", productos);
+
         return "cliente/colecciones";
     }
 
