@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-
 public interface ProductoRepository extends JpaRepository<Producto, Integer> {
 
     public List<Producto> findByActivoTrue();
@@ -28,4 +27,7 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
 
     // Búsqueda por nombre (insensible a mayúsculas)
     List<Producto> findByActivoTrueAndNombreContainingIgnoreCase(String nombre);
+
+    // Productos activos por colección para vista cliente
+    List<Producto> findByActivoTrueAndColeccionIdOrderByNombreAsc(Integer coleccionId);
 }
