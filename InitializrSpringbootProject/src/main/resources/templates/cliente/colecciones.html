@@ -1,15 +1,36 @@
 <!DOCTYPE html>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
     <body>
-        <div>TODO write content</div>
+        <header th:replace="~{general/fragmentos :: header}"></header>
+
+        <main class="container py-5">
+            <div class="mb-4 text-center">
+                <h2 class="fw-bold">Colecciones Griffin Lamps</h2>
+                <p class="text-muted mb-0">
+                    Selecciona una colección para ver únicamente los productos que pertenecen a ella.
+                </p>
+            </div>
+
+            <div class="d-flex flex-wrap justify-content-center gap-2 mb-5">
+                <a th:each="c : ${colecciones}"
+                   th:href="@{/cliente/colecciones(coleccionId=${c.id})}"
+                   class="btn"
+                   th:classappend="${coleccionActiva == c.id} ? ' btn-dark' : ' btn-outline-dark'">
+                    <span th:text="${c.nombre}">Colección</span>
+                </a>
+            </div>
+
+            <div th:if="${productos == null or #lists.isEmpty(productos)}" class="text-center py-5">
+                <h5 class="text-muted">No hay productos disponibles en esta colección.</h5>
+            </div>
+
+            <section th:if="${productos != null and !#lists.isEmpty(productos)}"
+                     th:replace="~{cliente/fragmentos :: tarjetas}">
+            </section>
+        </main>
+
+        <footer th:replace="~{general/fragmentos :: footer}"></footer>
     </body>
 </html>
