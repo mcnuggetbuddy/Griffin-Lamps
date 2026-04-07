@@ -23,3 +23,37 @@
     display: flex;
     align-items: center;
 }
+/* ===== ABOUT MEJORADO ===== */
+
+.about-img {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+}
+
+.offset-img {
+    margin-top: 40px;
+}
+
+.about-card {
+    padding: 25px;
+    border-radius: 20px;
+    border: 1px solid #eee;
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.about-chip {
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: 1px solid #ddd;
+    background: #f8f9fa;
+    font-size: 0.9rem;
+}
+
+.about-cta {
+    background: #f8f9fa;
+    border-radius: 25px;
+    padding: 60px 20px;
+    border: 1px solid #eee;
+}
