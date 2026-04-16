@@ -49,9 +49,10 @@
                         <div class="d-flex gap-2">
                             <form th:action="@{/carrito/agregar}" method="POST" class="d-inline">
                                 <input type="hidden" th:value="${p.idProducto}" name="idProducto"/>
-                                <button type="submit"
+                                <button type="button"
                                         class="btn btn-sm btn-dark"
-                                        th:disabled="${p.existencias == 0}">
+                                        th:disabled="${p.existencias == 0}"
+                                        onclick="addCart(this.form)">
                                     <i class="fas fa-cart-plus"></i>
                                 </button>
                             </form>

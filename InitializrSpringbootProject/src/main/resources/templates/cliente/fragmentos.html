@@ -41,9 +41,10 @@
                     <div class="d-flex gap-2">
                         <form th:action="@{/carrito/agregar}" method="POST" class="d-inline">
                             <input type="hidden" th:value="${p.idProducto}" name="idProducto"/>
-                            <button type="submit"
+                            <button type="button"
                                     class="btn btn-sm btn-dark"
-                                    th:disabled="${p.existencias == 0}">
+                                    th:disabled="${p.existencias == 0}"
+                                    onclick="addCart(this.form)">
                                 <i class="fas fa-cart-plus"></i>
                             </button>
                         </form>
@@ -90,7 +91,7 @@
                 <div th:each="img : ${producto.imagenes}"
                      style="width:72px; height:72px; overflow:hidden; border-radius:6px; cursor:pointer; border:2px solid transparent;"
                      class="miniatura"
-                     onclick="document.getElementById('imagenPrincipal').src=this.querySelector('img').src">
+                     onclick="document.getElementById('imagenPrincipal').src = this.querySelector('img').src">
                     <img th:src="${img.rutaImagen}"
                          th:alt="${producto.nombre}"
                          style="width:100%; height:100%; object-fit:cover;"/>
@@ -167,17 +168,17 @@
             <!-- Agregar al carrito -->
             <form th:action="@{/carrito/agregar}" method="POST">
                 <input type="hidden" th:value="${producto.idProducto}" name="idProducto"/>
-                <input type="hidden" id="inputColor"    name="idColor"    value=""/>
+                <input type="hidden" id="inputColor" name="idColor" value=""/>
                 <input type="hidden" id="inputVariante" name="idVariante" value=""/>
-                <button type="submit"
+                <button type="button"
                         class="btn btn-dark w-100"
-                        th:disabled="${producto.existencias == 0}">
+                        th:disabled="${producto.existencias == 0}"
+                        onclick="addCart(this.form)">
                     <i class="fas fa-cart-plus me-2"></i>
-                    <span th:if="${producto.existencias > 0}">[[#{buscar.boton}]]</span>
+                    <span th:if="${producto.existencias > 0}">[[#{carrito.agregar}]]</span>
                     <span th:unless="${producto.existencias > 0}">[[#{estado.agotado}]]</span>
                 </button>
             </form>
-
         </div>
     </div>
 </section>

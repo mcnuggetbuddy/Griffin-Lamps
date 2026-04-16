@@ -109,3 +109,22 @@ document.addEventListener('DOMContentLoaded', function () {
         if (vb) selectVariante(vb);
     }
 });
+
+// Agregar producto al carrito y refrescar el bloque del header
+function addCart(formulario) {
+    var ruta = $(formulario).attr('action') || '/carrito/agregar';
+    var datos = $(formulario).serialize();
+
+    $.ajax({
+        url: ruta,
+        type: 'POST',
+        data: datos,
+        success: function (response) {
+            $("#resultBlock").html(response);
+        },
+        error: function (xhr) {
+            var mensaje = xhr.responseText || 'Error al agregar el producto al carrito.';
+            alert(mensaje);
+        }
+    });
+}
