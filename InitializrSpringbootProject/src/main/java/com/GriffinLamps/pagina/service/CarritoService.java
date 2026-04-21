@@ -57,7 +57,9 @@ public class CarritoService {
         session.setAttribute(ATTRIBUTE_CARRITO, carrito);
     }
 
-    public void agregarProducto(List<Item> carrito, Integer idProducto, Integer idColor, Integer idVariante) {
+    public void agregarProducto(List<Item> carrito, Integer idProducto, Integer idColor, Integer idVariante, int cantidad) {
+        if (cantidad < 1) cantidad = 1;
+
         Producto producto = productoRepository.findById(idProducto)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado."));
 
@@ -93,17 +95,20 @@ public class CarritoService {
 
         if (itemExistente.isPresent()) {
             Item item = itemExistente.get();
-            int nuevaCantidad = item.getCantidad() + 1;
+            int nuevaCantidad = item.getCantidad() + cantidad;
 
             if (nuevaCantidad > producto.getExistencias()) {
-                throw new RuntimeException("Stock insuficiente para agregar otra unidad.");
+                throw new RuntimeException("Stock insuficiente para agregar esa cantidad.");
             }
 
             item.setCantidad(nuevaCantidad);
         } else {
+            if (cantidad > producto.getExistencias()) {
+                throw new RuntimeException("Stock insuficiente para agregar esa cantidad.");
+            }
             Item nuevoItem = new Item();
             nuevoItem.setProducto(producto);
-            nuevoItem.setCantidad(1);
+            nuevoItem.setCantidad(cantidad);
             nuevoItem.setColor(color);
             nuevoItem.setVariante(variante);
             nuevoItem.setPrecioHistorico(calcularPrecioHistorico(producto, variante));

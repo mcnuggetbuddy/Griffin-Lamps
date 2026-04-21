@@ -108,6 +108,8 @@
 
             <!-- Precio -->
             <p class="h4 text-success mb-4"
+               id="precioPrincipal"
+               th:attr="data-precio-base=${producto.precioColones}"
                th:text="'₡' + ${#numbers.formatDecimal(producto.precioColones, 1, 'POINT', 2, 'COMMA')}"></p>
 
             <!-- Descripción -->
@@ -155,7 +157,7 @@
                 <div class="d-flex gap-2 flex-wrap" id="variantesGroup">
                     <button type="button"
                             th:each="v : ${producto.variantes}"
-                            th:attr="data-id=${v.idVariante}"
+                            th:attr="data-id=${v.idVariante}, data-precio-extra=${v.precioExtra != null ? v.precioExtra : 0}"
                             class="variante-btn btn btn-outline-dark btn-sm">
                         <span th:text="${v.tamano}"></span>
                         <span th:if="${v.precioExtra != null and v.precioExtra.signum() gt 0}"
@@ -170,6 +172,14 @@
                 <input type="hidden" th:value="${producto.idProducto}" name="idProducto"/>
                 <input type="hidden" id="inputColor" name="idColor" value=""/>
                 <input type="hidden" id="inputVariante" name="idVariante" value=""/>
+                <div class="mb-3 d-flex align-items-center gap-3">
+                    <label class="fw-semibold mb-0">[[#{carrito.cantidad}]]</label>
+                    <input type="number" name="cantidad" value="1" min="1"
+                           th:max="${producto.existencias}"
+                           class="form-control w-auto"
+                           style="width:90px !important;"
+                           th:disabled="${producto.existencias == 0}"/>
+                </div>
                 <button type="button"
                         class="btn btn-dark w-100"
                         th:disabled="${producto.existencias == 0}"

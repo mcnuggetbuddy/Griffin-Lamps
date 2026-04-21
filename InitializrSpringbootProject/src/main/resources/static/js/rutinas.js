@@ -65,6 +65,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const KC  = 'gl-color-'    + pid;
     const KV  = 'gl-variante-' + pid;
 
+    const precioEl   = document.getElementById('precioPrincipal');
+    const precioBase = precioEl ? parseFloat(precioEl.dataset.precioBase) : 0;
+
+    function formatCRC(num) {
+        return '₡' + new Intl.NumberFormat('es-CR', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }).format(num);
+    }
+
     function selectColor(btn) {
         document.querySelectorAll('.color-btn').forEach(function (b) {
             b.style.border    = '3px solid transparent';
@@ -79,7 +89,23 @@ document.addEventListener('DOMContentLoaded', function () {
         sessionStorage.setItem(KC, btn.dataset.id);
     }
 
+    function deseleccionarVariante() {
+        document.querySelectorAll('.variante-btn').forEach(function (b) {
+            b.classList.remove('btn-dark');
+            b.classList.add('btn-outline-dark');
+        });
+        const input = document.getElementById('inputVariante');
+        if (input) input.value = '';
+        sessionStorage.removeItem(KV);
+        if (precioEl) precioEl.textContent = formatCRC(precioBase);
+    }
+
     function selectVariante(btn) {
+        // Si ya está seleccionado, deseleccionar → precio estándar
+        if (btn.classList.contains('btn-dark')) {
+            deseleccionarVariante();
+            return;
+        }
         document.querySelectorAll('.variante-btn').forEach(function (b) {
             b.classList.remove('btn-dark');
             b.classList.add('btn-outline-dark');
@@ -89,6 +115,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const input = document.getElementById('inputVariante');
         if (input) input.value = btn.dataset.id;
         sessionStorage.setItem(KV, btn.dataset.id);
+        if (precioEl) {
+            const extra = parseFloat(btn.dataset.precioExtra || 0);
+            precioEl.textContent = formatCRC(precioBase + extra);
+        }
     }
 
     document.querySelectorAll('.color-btn').forEach(function (btn) {
@@ -110,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-// Agregar producto al carrito y refrescar el bloque del header
+// Agregar producto al carrito y navegar al carrito
 function addCart(formulario) {
     var ruta = $(formulario).attr('action') || '/carrito/agregar';
     var datos = $(formulario).serialize();
@@ -119,8 +149,8 @@ function addCart(formulario) {
         url: ruta,
         type: 'POST',
         data: datos,
-        success: function (response) {
-            $("#resultBlock").html(response);
+        success: function () {
+            window.location.href = '/carrito/listado';
         },
         error: function (xhr) {
             var mensaje = xhr.responseText || 'Error al agregar el producto al carrito.';

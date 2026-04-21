@@ -5,8 +5,10 @@
 package com.GriffinLamps.pagina.Controller;
 
 import com.GriffinLamps.pagina.Domain.Usuario;
+import com.GriffinLamps.pagina.Repository.RolRepository;
 import com.GriffinLamps.pagina.Service.UsuarioService;
 import jakarta.validation.Valid;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import org.springframework.context.MessageSource;
@@ -26,11 +28,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
+    private final RolRepository rolRepository;
     private final MessageSource messageSource;
 
     public UsuarioController(UsuarioService usuarioService,
+            RolRepository rolRepository,
             MessageSource messageSource) {
         this.usuarioService = usuarioService;
+        this.rolRepository = rolRepository;
         this.messageSource = messageSource;
     }
 
@@ -45,19 +50,20 @@ public class UsuarioController {
     @PostMapping("/guardar")
     public String guardar(@Valid Usuario usuario,
             BindingResult bindingResult,
+            @RequestParam(value = "rolesIds", required = false) List<Integer> rolesIds,
             RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            // Redirige al formulario de edición/creación para mostrar errores
             redirectAttributes.addFlashAttribute("error",
                     messageSource.getMessage("usuario.error04", null, Locale.getDefault()));
-            // Si no hay idUsuario, redirige al listado con modal para agregar
             if (usuario.getIdUsuario() == null) {
                 return "redirect:/usuario/listado";
             }
-            // Si hay idUsuario, redirige al formulario de modificación
             return "redirect:/usuario/modificar/" + usuario.getIdUsuario();
         }
         usuarioService.save(usuario, true);
+        if (usuario.getIdUsuario() != null && rolesIds != null && !rolesIds.isEmpty()) {
+            usuarioService.actualizarRoles(usuario.getIdUsuario(), rolesIds);
+        }
         redirectAttributes.addFlashAttribute("todoOk",
                 messageSource.getMessage("mensaje.actualizado",
                         null, Locale.getDefault()));
@@ -103,6 +109,7 @@ public class UsuarioController {
         Usuario usuario = usuarioOpt.get();
         usuario.setPassword("");
         model.addAttribute("usuario", usuario);
+        model.addAttribute("roles", rolRepository.findAll());
         return "/usuario/modifica";
     }
 }

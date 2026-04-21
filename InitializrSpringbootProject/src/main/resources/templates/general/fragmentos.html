@@ -17,94 +17,115 @@
 
 <!-- Fragmento #2  define el encabezado de las páginas, en concreto el menú y enlaces rápidos -->
 <header th:fragment="header" class="header">
-    <nav class="navbar navbar-expand-sm p-0">
-        <div class="container-fluid"> 
-            <a class="navbar-brand" th:href="@{/}">
+    <nav class="navbar navbar-expand-lg border-bottom px-3">
+        <div class="container-fluid">
+
+            <!-- Logo -->
+            <a class="navbar-brand me-3" th:href="@{/}">
                 <img th:src="@{/logo/Griffin-Lamps-LogoWEB-01.svg}"
                      th:alt="#{aplicacion.titulo}"
-                     height="60"/>
+                     height="50"/>
             </a>
-            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+
+            <!-- Botón hamburguesa (móvil) -->
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                    aria-controls="navbarCollapse" aria-expanded="false">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                
-                <ul class="navbar-nav" sec:authorize="!hasAnyRole('ROLE_ADMIN','ROLE_VENDEDOR')">
-                    <li class="nav-item px-2"><a class="nav-link" th:href="@{/cliente/productos}">[[#{plantilla.productos}]]</a></li>
-                    <li class="nav-item px-2"><a class="nav-link" th:href="@{/cliente/colecciones}">[[#{plantilla.colecciones}]]</a></li>
-                    <li class="nav-item px-2"><a class="nav-link" th:href="@{/about/listado}">[[#{plantilla.about}]]</a></li>
+
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+
+                <!-- Links izquierda: cliente -->
+                <ul class="navbar-nav me-auto gap-1" sec:authorize="!hasAnyRole('ROLE_ADMIN','ROLE_VENDEDOR')">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/cliente/productos}">[[#{plantilla.productos}]]</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/cliente/colecciones}">[[#{plantilla.colecciones}]]</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/about/listado}">[[#{plantilla.about}]]</a></li>
                 </ul>
-                
-                <ul class="navbar-nav" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_VENDEDOR')">
-                    <li class="nav-item px-2"><a class="nav-link" th:href="@{/colecciones/listado}">[[#{plantilla.colecciones}]]</a></li>
-                    <li class="nav-item px-2"><a class="nav-link" th:href="@{/producto/listado}">[[#{plantilla.productos}]]</a></li>
-                    <li class="nav-item px-2"><a class="nav-link" th:href="@{/about/listado}">[[#{plantilla.about}]]</a></li>
-                    <li class="nav-item px-2"><a class="nav-link" th:href="@{/ordenes/listado}">[[#{plantilla.ordenes}]]</a></li>
+
+                <!-- Links izquierda: admin -->
+                <ul class="navbar-nav me-auto gap-1" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/colecciones/listado}">[[#{plantilla.colecciones}]]</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/producto/listado}">[[#{plantilla.productos}]]</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/about/listado}">[[#{plantilla.about}]]</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/ordenes/listado}">[[#{plantilla.ordenes}]]</a></li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">
                             [[#{plantilla.admin}]]</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" th:href="@{/usuario/listado}">[[#{plantilla.usuarios}]]</a></li>                                    
-                            <li class="submenu submenu-md dropend">
-                                <a class="dropdown-item dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                   onclick="event.stopPropagation();">
-                                    [[#{plantilla.seguridad}]]
-                                </a>
-                                <ul class="dropdown-menu">                                            
-                                    <li><a class="dropdown-item" th:href="@{/role/listado}">[[#{plantilla.troles}]]</a></li>
-                                    <li><a class="dropdown-item" th:href="@{/usuario_rol/mantenimiento}">[[#{plantilla.permisos}]]</a></li>
-                                    <li><a class="dropdown-item" th:href="@{/ruta/listado}">[[#{plantilla.rutas}]]</a></li>
-                                </ul>
+                            <li><a class="dropdown-item" th:href="@{/usuario/listado}">[[#{plantilla.usuarios}]]</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <!-- Links izquierda: vendedor -->
+                <ul class="navbar-nav me-auto gap-1" sec:authorize="hasRole('ROLE_VENDEDOR')">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/colecciones/listado}">[[#{plantilla.colecciones}]]</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/producto/listado}">[[#{plantilla.productos}]]</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/about/listado}">[[#{plantilla.about}]]</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/ordenes/listado}">[[#{plantilla.ordenes}]]</a></li>
+                </ul>
+
+                <!-- Acciones derecha -->
+                <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0">
+
+                    <!-- Búsqueda (solo cliente) -->
+                    <form class="d-flex" role="search" method="get"
+                          th:action="@{/cliente/productos}"
+                          sec:authorize="!hasAnyRole('ROLE_ADMIN','ROLE_VENDEDOR')">
+                        <input class="form-control form-control-sm rounded-5 me-1" type="search"
+                               name="buscar"
+                               th:value="${buscar}"
+                               th:placeholder="#{buscar.placeholder}"
+                               style="width:160px;"/>
+                        <button class="btn btn-sm btn-outline-secondary rounded-5" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+
+                    <!-- Idioma -->
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle px-1" data-bs-toggle="dropdown" href="#" role="button">
+                            <i class="fas fa-globe"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" th:href="@{''(lang=es)}">🇪🇸 Español</a></li>
+                            <li><a class="dropdown-item" th:href="@{''(lang=en)}">🇬🇧 English</a></li>
+                            <li><a class="dropdown-item" th:href="@{''(lang=fr)}">🇫🇷 Française</a></li>
+                            <li><a class="dropdown-item" th:href="@{''(lang=pt)}">🇧🇷 Portugaise</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Carrito (solo no admin/vendedor) -->
+                    <a class="nav-link px-1" th:href="@{/carrito/listado}"
+                       sec:authorize="!hasAnyRole('ROLE_ADMIN','ROLE_VENDEDOR')">
+                        <i class="fas fa-shopping-cart"></i>
+                    </a>
+
+                    <!-- No autenticado: Login -->
+                    <a class="btn btn-sm btn-outline-dark rounded-5" th:href="@{/login}"
+                       sec:authorize="!isAuthenticated()">
+                        <i class="fas fa-sign-in-alt me-1"></i>Login
+                    </a>
+
+                    <!-- Autenticado: usuario + logout -->
+                    <div class="dropdown" sec:authorize="isAuthenticated()">
+                        <a class="nav-link dropdown-toggle px-1" data-bs-toggle="dropdown" href="#" role="button">
+                            <i class="fas fa-user me-1"></i>
+                            <span sec:authentication="name"></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <form method="post" th:action="@{/logout}" class="px-3 py-1">
+                                    <button class="btn btn-sm btn-outline-danger w-100" type="submit">
+                                        <i class="fas fa-sign-out-alt me-1"></i>Logout
+                                    </button>
+                                </form>
                             </li>
-                            <li><a class="dropdown-item" th:href="@{/constante/listado}">[[#{plantilla.constantes}]]</a></li>
                         </ul>
-                    </li>
-                </ul>
-                <form class="d-flex" role="search" method="get" th:action="@{/cliente/productos}">
-                    <input class="form-control rounded-5 me-2" type="search" name="buscar"
-                           th:value="${buscar}"
-                           th:placeholder="#{buscar.placeholder}"
-                           th:attr="aria-label=#{buscar.aria}"/>
-                    <button class="btn btn-outline-success rounded-5" type="submit">[[#{buscar.boton}]]</button>
-                </form>
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                            [[#{plantilla.idioma}]]</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" th:href="@{''(lang=es)}">Español</a></li>
-                            <li><a class="dropdown-item" th:href="@{''(lang=en)}">English</a></li>
-                            <li><a class="dropdown-item" th:href="@{''(lang=fr)}">Française</a></li>
-                            <li><a class="dropdown-item" th:href="@{''(lang=pt)}">Portugaise</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <div id="resultBlock">
+                    </div>
+
                 </div>
-                <ul class="navbar-nav" sec:authorize="!isAuthenticated()">
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/login}">
-                            <i class="fas fa-sign-in-alt"></i>
-                            <span class="ms-1">Login</span>
-                        </a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav" sec:authorize="isAuthenticated()">
-                    <li class="nav-item my-auto">
-                        <a class="nav-link">
-                            <i class="fas fa-user"></i>
-                            <span sec:authentication="name" class="ms-1"></span>
-                        </a>
-                    </li>
-                    <li class="nav-item my-auto">
-                        <form method="post" th:action="@{/logout}">
-                            <button class="btn nav-link" type="submit">
-                                <i class="fas fa-sign-out-alt"></i>
-                                <span class="ms-1">Logout</span>
-                            </button>
-                        </form>
-                    </li>
-                </ul>
             </div>
         </div>
     </nav>

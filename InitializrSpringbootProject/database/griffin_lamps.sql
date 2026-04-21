@@ -148,7 +148,9 @@ CREATE TABLE pedido (
 
     total_colones DECIMAL(10,2) NOT NULL,
 
-    fecha DATE NOT NULL
+    fecha DATE NOT NULL,
+
+    estado VARCHAR(20) NOT NULL DEFAULT 'Pendiente'
 
 ) ENGINE=InnoDB;
 
@@ -388,3 +390,4 @@ INSERT INTO ruta (ruta, requiere_rol) VALUES
 ('/registro/**',   false),
 ('/nosotros',   false),
 ('/about/**',   false);
+

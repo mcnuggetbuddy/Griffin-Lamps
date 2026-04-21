@@ -41,12 +41,13 @@ public class CarritoController {
     public ModelAndView agregar(@RequestParam("idProducto") Integer idProducto,
             @RequestParam(value = "idColor", required = false) Integer idColor,
             @RequestParam(value = "idVariante", required = false) Integer idVariante,
+            @RequestParam(value = "cantidad", defaultValue = "1") int cantidad,
             HttpSession session,
             Model model) {
         try {
             List<Item> carrito = carritoService.obtenerCarrito(session);
 
-            carritoService.agregarProducto(carrito, idProducto, idColor, idVariante);
+            carritoService.agregarProducto(carrito, idProducto, idColor, idVariante, cantidad);
             carritoService.guardarCarrito(session, carrito);
 
             model.addAttribute("carritoTotal", carritoService.calcularTotal(carrito));

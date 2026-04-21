@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <head th:replace="~{general/plantilla :: head}"/>
+
+    <body>
+
+        <!-- fragmento 1: listado de órdenes -->
+        <section th:fragment="listado" class="p-3">
+            <div class="row p-3">
+                <div class="col-md-9">
+                    <div class="card p-2">
+                        <div class="card-header"><h4>[[#{orden.listado}]]</h4></div>
+                        <div class="card-body">
+                            <div th:if="${pedidos != null and !pedidos.empty}">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>[[#{pedido.numeroOrden}]]</th>
+                                                <th>[[#{pedido.cliente}]]</th>
+                                                <th>[[#{pedido.correo}]]</th>
+                                                <th>[[#{pedido.fecha}]]</th>
+                                                <th>[[#{pedido.estado}]]</th>
+                                                <th class="text-end">[[#{pedido.total}]]</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="p : ${pedidos}">
+                                                <td>[[${p.id}]]</td>
+                                                <td><code th:text="${p.numeroOrden}"></code></td>
+                                                <td>[[${p.nombreCliente}]]</td>
+                                                <td>[[${p.correo}]]</td>
+                                                <td>[[${p.fecha}]]</td>
+                                                <td>
+                                                    <span th:classappend="${p.estado.name() == 'Pendiente'} ? 'bg-warning text-dark' : (${p.estado.name() == 'Pagado'} ? 'bg-success' : 'bg-danger')"
+                                                          class="badge">
+                                                        [[${p.estado.valorBD}]]
+                                                    </span>
+                                                </td>
+                                                <td class="text-end">[[${#numbers.formatCurrency(p.totalColones)}]]</td>
+                                                <td>
+                                                    <a th:href="@{/ordenes/detalle/}+${p.id}" class="btn btn-info btn-sm">
+                                                        <i class="fa-solid fa-eye"></i> [[#{accion.editar}]]
+                                                    </a>
+                                                    <button type="button" class="btn btn-danger btn-sm"
+                                                            data-bs-toggle="modal" data-bs-target="#confirmModal"
+                                                            th:data-bs-id="${p.id}"
+                                                            th:data-bs-descripcion="${p.numeroOrden}">
+                                                        <i class="fa-solid fa-trash"></i> [[#{accion.eliminar}]]
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="text-center p-2" th:if="${pedidos == null or pedidos.empty}">
+                                <span>[[#{lista.vacia}]]</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- PANEL DERECHO: estadísticas -->
+                <div class="col-md-3">
+                    <div class="card text-center bg-success text-white mb-3">
+                        <div class="card-body">
+                            <h3>[[#{orden.total}]]</h3>
+                            <h4 class="fs-2"><i class="fas fa-layer-group"></i> [[${totalPedidos}]]</h4>
+                        </div>
+                    </div>
+                    <div class="card text-center bg-warning text-dark mb-3">
+                        <div class="card-body">
+                            <h5>[[#{orden.pendientes}]]</h5>
+                            <h4 class="fs-2"><i class="fas fa-clock"></i> [[${totalPendientes}]]</h4>
+                        </div>
+                    </div>
+                    <div class="card text-center bg-primary text-white mb-3">
+                        <div class="card-body">
+                            <h5>[[#{orden.pagadas}]]</h5>
+                            <h4 class="fs-2"><i class="fas fa-check-circle"></i> [[${totalPagados}]]</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- fragmento 2: detalle / factura de una orden -->
+        <section th:fragment="detalle" class="container py-4">
+            <div class="row py-3 mb-3 bg-light">
+                <div class="col-md-2">
+                    <a th:href="@{/ordenes/listado}" class="btn btn-primary">
+                        <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
+                    </a>
+                </div>
+                <div class="col-md-2">
+                    <button onclick="window.print()" class="btn btn-outline-secondary">
+                        <i class="fas fa-print"></i> [[#{orden.imprimir}]]
+                    </button>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">[[#{orden.detalle}]]</h4>
+                    <span th:classappend="${pedido.estado.name() == 'Pendiente'} ? 'bg-warning text-dark' : (${pedido.estado.name() == 'Pagado'} ? 'bg-success' : 'bg-danger')"
+                          class="badge fs-6">
+                        [[${pedido.estado.valorBD}]]
+                    </span>
+                </div>
+                <div class="card-body">
+                    <!-- Datos del pedido -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <p><strong>[[#{pedido.numeroOrden}]]:</strong> <code th:text="${pedido.numeroOrden}"></code></p>
+                            <p><strong>[[#{pedido.fecha}]]:</strong> <span th:text="${pedido.fecha}"></span></p>
+                            <p><strong>[[#{pedido.metodoPago}]]:</strong> <span th:text="${pedido.metodoPago}"></span></p>
+                            <p><strong>[[#{pedido.direccionEnvio}]]:</strong> <span th:text="${pedido.direccionEnvio}"></span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>[[#{pedido.cliente}]]:</strong> <span th:text="${pedido.nombreCliente}"></span></p>
+                            <p><strong>[[#{pedido.correo}]]:</strong> <span th:text="${pedido.correo}"></span></p>
+                            <p><strong>[[#{pedido.telefono}]]:</strong> <span th:text="${pedido.telefono}"></span></p>
+                        </div>
+                    </div>
+
+                    <!-- Actualizar estado -->
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <h6>[[#{orden.actualizarEstado}]]</h6>
+                            <form th:action="@{/ordenes/actualizarEstado}" method="post" class="d-flex gap-2">
+                                <input type="hidden" name="id" th:value="${pedido.id}"/>
+                                <select name="estado" class="form-select w-auto">
+                                    <option th:each="e : ${estados}"
+                                            th:value="${e.name()}"
+                                            th:text="${e.valorBD}"
+                                            th:selected="${e == pedido.estado}">
+                                    </option>
+                                </select>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-check"></i> [[#{accion.guardar}]]
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Detalle de productos -->
+                    <div class="table-responsive mb-4">
+                        <table class="table table-bordered">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>[[#{producto.nombre}]]</th>
+                                    <th class="text-center">[[#{carrito.cantidad}]]</th>
+                                    <th class="text-end">[[#{producto.precio}]]</th>
+                                    <th>[[#{pedido.color}]]</th>
+                                    <th>[[#{pedido.talla}]]</th>
+                                    <th class="text-end">[[#{pedido.total}]]</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="detalle : ${pedido.detalles}">
+                                    <td th:text="${detalle.producto.nombre}"></td>
+                                    <td class="text-center" th:text="${detalle.cantidad}"></td>
+                                    <td class="text-end">[[${#numbers.formatCurrency(detalle.precioUnit)}]]</td>
+                                    <td th:text="${detalle.color != null ? detalle.color : '-'}"></td>
+                                    <td th:text="${detalle.talla != null ? detalle.talla : '-'}"></td>
+                                    <td class="text-end">[[${#numbers.formatCurrency(detalle.precioUnit * detalle.cantidad)}]]</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Total -->
+                    <div class="text-end">
+                        <h4 class="text-success">
+                            [[#{pedido.total}]]: [[${#numbers.formatCurrency(pedido.totalColones)}]]
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- fragmento 3: modal confirmar eliminación -->
+        <section th:fragment="confirmarEliminar">
+            <div class="modal fade"
+                 id="confirmModal"
+                 tabindex="-1"
+                 aria-labelledby="modalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered custom-modal-animation">
+                    <div class="modal-content animate-slide-up">
+                        <form th:action="@{/ordenes/eliminar}" method="post">
+                            <input type="hidden" name="id" id="modalId"/>
+                            <div class="modal-header bg-warning text-white">
+                                <h5 class="modal-title" id="modalLabel">
+                                    <i class="fa-solid fa-circle-radiation"></i> [[#{accion.confirmar}]]
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>[[#{accion.confirmar.texto1}]] <span id="modalDescripcion"></span>?</p>
+                                <h6>[[#{accion.confirmar.texto2}]]</h6>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fa-solid fa-trash"></i> [[#{accion.eliminar}]]
+                                </button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <i class="fa-solid fa-xmark"></i> [[#{accion.cerrar}]]
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </body>
+</html>

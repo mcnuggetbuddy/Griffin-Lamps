@@ -30,7 +30,6 @@
                                 <table class="table align-middle mb-0">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
                                             <th>[[#{producto.nombre}]]</th>
                                             <th>[[#{carrito.detalle}]]</th>
                                             <th class="text-end">
@@ -49,10 +48,6 @@
 
                                     <tbody>
                                         <tr th:each="item, contador : ${carritoItems}">
-                                            <td>
-                                                [[${contador.index}]]
-                                            </td>
-
                                             <td>
                                                 <div class="fw-semibold"
                                                      th:text="${item.producto.nombre}">

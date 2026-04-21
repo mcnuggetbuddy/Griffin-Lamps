@@ -10,6 +10,7 @@ import com.GriffinLamps.pagina.Repository.RolRepository;
 import com.GriffinLamps.pagina.Repository.UsuarioRepository;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -90,17 +91,17 @@ public class UsuarioService {
             usuario.setPassword(encriptaClave ? passwordEncoder.encode(usuario.getPassword()) : usuario.getPassword());
             asignarRol = true;
         } else {
-            if (usuario.getPassword() == null || usuario.getPassword().isBlank()) {
-                // El campo de password en el formulario viene vacío (no se desea actualizar).
-                // Recuperamos la contraseña HASHED existente de la base de datos.
-                Usuario usuarioExistente = usuarioRepository.findById(usuario.getIdUsuario())
-                        .orElseThrow(() -> new IllegalArgumentException("Usuario a modificar no encontrado."));
+            Usuario usuarioExistente = usuarioRepository.findById(usuario.getIdUsuario())
+                    .orElseThrow(() -> new IllegalArgumentException("Usuario a modificar no encontrado."));
 
-                // Asignamos la contraseña existente al objeto "usuario" antes de guardarlo.                
+            // Preserve roles from DB if the form didn't submit any (avoids wiping join table)
+            if (usuario.getRoles() == null || usuario.getRoles().isEmpty()) {
+                usuario.setRoles(usuarioExistente.getRoles());
+            }
+
+            if (usuario.getPassword() == null || usuario.getPassword().isBlank()) {
                 usuario.setPassword(encriptaClave ? passwordEncoder.encode(usuarioExistente.getPassword()) : usuarioExistente.getPassword());
             } else {
-                // El campo de password NO está vacío (se desea actualizar).
-                // Se encripta y se guarda la nueva contraseña.
                 usuario.setPassword(encriptaClave ? passwordEncoder.encode(usuario.getPassword()) : usuario.getPassword());
             }
         }
@@ -126,6 +127,15 @@ public class UsuarioService {
             throw new IllegalStateException(
                     "No se puede eliminar el usuario. Tiene datos asociados.", e);
         }
+    }
+
+    @Transactional
+    public void actualizarRoles(Integer idUsuario, List<Integer> rolesIds) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado."));
+        Set<Rol> nuevosRoles = new java.util.HashSet<>(rolRepository.findAllById(rolesIds));
+        usuario.setRoles(nuevosRoles);
+        usuarioRepository.save(usuario);
     }
 
     @Transactional

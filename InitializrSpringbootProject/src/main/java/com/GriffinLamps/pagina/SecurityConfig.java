@@ -31,7 +31,11 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(requests -> {
             requests.requestMatchers("/cliente/**").permitAll();
+            requests.requestMatchers("/carrito/agregar").permitAll();
             requests.requestMatchers("/acceso_denegado").permitAll();
+            // Vendedor can view product/collection listings but not modify (CRUD routes stay in DB as ADMIN-only)
+            requests.requestMatchers("/producto/listado", "/producto/listado/**").hasAnyRole("ADMIN", "VENDEDOR");
+            requests.requestMatchers("/ordenes/**").hasAnyRole("ADMIN", "VENDEDOR");
             for (Ruta ruta : rutas) {
                 if (ruta.isRequiereRol()) {
                     requests.requestMatchers(ruta.getRuta()).hasRole(ruta.getRol().getRol());
@@ -54,7 +58,8 @@ public class SecurityConfig {
                 .deleteCookies("JSESSIONID")
                 .permitAll()
         ).exceptionHandling(exceptions -> exceptions // Manejo de excepciones
-                .accessDeniedPage("/acceso_denegado")
+                .accessDeniedHandler((request, response, ex) ->
+                        response.sendRedirect(request.getContextPath() + "/acceso_denegado"))
         ).sessionManagement(session -> session // Configuración de sesiones
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(false)
