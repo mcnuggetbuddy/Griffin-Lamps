@@ -1,3 +1,186 @@
+/* Bootswatch Brite - Button Overrides */
+.btn {
+    font-weight: 400;
+    border-width: 2px;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+}
+
+.btn-primary {
+    --bs-btn-bg: #a2e436;
+    --bs-btn-border-color: #a2e436;
+    --bs-btn-color: #000;
+    --bs-btn-hover-bg: #b0e854;
+    --bs-btn-hover-border-color: #b0e854;
+    --bs-btn-hover-color: #000;
+    --bs-btn-active-bg: #b5e95e;
+    --bs-btn-active-border-color: #b5e95e;
+    --bs-btn-active-color: #000;
+    --bs-btn-disabled-bg: #a2e436;
+    --bs-btn-disabled-border-color: #a2e436;
+    --bs-btn-disabled-color: #000;
+}
+
+.btn-secondary {
+    --bs-btn-bg: #fff;
+    --bs-btn-border-color: #fff;
+    --bs-btn-color: #000;
+    --bs-btn-hover-bg: #fff;
+    --bs-btn-hover-border-color: #fff;
+    --bs-btn-hover-color: #000;
+    --bs-btn-active-bg: #fff;
+    --bs-btn-active-border-color: #fff;
+    --bs-btn-active-color: #000;
+    --bs-btn-disabled-bg: #fff;
+    --bs-btn-disabled-border-color: #fff;
+    --bs-btn-disabled-color: #000;
+}
+
+.btn-success {
+    --bs-btn-bg: #68d391;
+    --bs-btn-border-color: #68d391;
+    --bs-btn-color: #000;
+    --bs-btn-hover-bg: #7fdaa2;
+    --bs-btn-hover-border-color: #7fdaa2;
+    --bs-btn-hover-color: #000;
+    --bs-btn-active-bg: #86dca7;
+    --bs-btn-active-border-color: #86dca7;
+    --bs-btn-active-color: #000;
+    --bs-btn-disabled-bg: #68d391;
+    --bs-btn-disabled-border-color: #68d391;
+    --bs-btn-disabled-color: #000;
+}
+
+.btn-danger {
+    --bs-btn-bg: #f56565;
+    --bs-btn-border-color: #f56565;
+    --bs-btn-color: #000;
+    --bs-btn-hover-bg: #f77c7c;
+    --bs-btn-hover-border-color: #f77c7c;
+    --bs-btn-hover-color: #000;
+    --bs-btn-active-bg: #f78484;
+    --bs-btn-active-border-color: #f78484;
+    --bs-btn-active-color: #000;
+    --bs-btn-disabled-bg: #f56565;
+    --bs-btn-disabled-border-color: #f56565;
+    --bs-btn-disabled-color: #000;
+}
+
+.btn-warning {
+    --bs-btn-bg: #ffc700;
+    --bs-btn-border-color: #ffc700;
+    --bs-btn-color: #000;
+    --bs-btn-hover-bg: #ffcf26;
+    --bs-btn-hover-border-color: #ffcf26;
+    --bs-btn-hover-color: #000;
+    --bs-btn-active-bg: #ffd233;
+    --bs-btn-active-border-color: #ffd233;
+    --bs-btn-active-color: #000;
+    --bs-btn-disabled-bg: #ffc700;
+    --bs-btn-disabled-border-color: #ffc700;
+    --bs-btn-disabled-color: #000;
+}
+
+.btn-info {
+    --bs-btn-bg: #22d2ed;
+    --bs-btn-border-color: #22d2ed;
+    --bs-btn-color: #000;
+    --bs-btn-hover-bg: #43d9f0;
+    --bs-btn-hover-border-color: #43d9f0;
+    --bs-btn-hover-color: #000;
+    --bs-btn-active-bg: #4edbf1;
+    --bs-btn-active-border-color: #4edbf1;
+    --bs-btn-active-color: #000;
+    --bs-btn-disabled-bg: #22d2ed;
+    --bs-btn-disabled-border-color: #22d2ed;
+    --bs-btn-disabled-color: #000;
+}
+
+.btn-dark {
+    --bs-btn-bg: #000;
+    --bs-btn-border-color: #000;
+    --bs-btn-color: #fff;
+    --bs-btn-hover-bg: #262626;
+    --bs-btn-hover-border-color: #262626;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-bg: #333;
+    --bs-btn-active-border-color: #333;
+    --bs-btn-active-color: #fff;
+    --bs-btn-disabled-bg: #000;
+    --bs-btn-disabled-border-color: #000;
+}
+
+.btn-light {
+    --bs-btn-bg: #e9ecef;
+    --bs-btn-border-color: #e9ecef;
+    --bs-btn-color: #000;
+    --bs-btn-hover-bg: #c6c9cb;
+    --bs-btn-hover-border-color: #c6c9cb;
+    --bs-btn-hover-color: #000;
+    --bs-btn-active-bg: #babdbf;
+    --bs-btn-active-border-color: #babdbf;
+    --bs-btn-active-color: #000;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: #a2e436;
+    --bs-btn-border-color: #a2e436;
+    --bs-btn-hover-bg: #a2e436;
+    --bs-btn-hover-border-color: #a2e436;
+    --bs-btn-hover-color: #000;
+    --bs-btn-active-bg: #a2e436;
+    --bs-btn-active-border-color: #a2e436;
+    --bs-btn-active-color: #000;
+}
+
+.btn-outline-secondary {
+    --bs-btn-color: #fff;
+    --bs-btn-border-color: #fff;
+    --bs-btn-hover-bg: #fff;
+    --bs-btn-hover-border-color: #fff;
+    --bs-btn-hover-color: #000;
+    --bs-btn-active-bg: #fff;
+    --bs-btn-active-border-color: #fff;
+    --bs-btn-active-color: #000;
+}
+
+.btn-outline-dark {
+    --bs-btn-color: #000;
+    --bs-btn-border-color: #000;
+    --bs-btn-hover-bg: #000;
+    --bs-btn-hover-border-color: #000;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-bg: #000;
+    --bs-btn-active-border-color: #000;
+    --bs-btn-active-color: #fff;
+}
+
+/* Bootswatch Brite - Summary Card Styles */
+.card-brite-success {
+    background-color: #68d391;
+    border-color: #68d391;
+    color: #000;
+}
+
+.card-brite-primary {
+    background-color: #a2e436;
+    border-color: #a2e436;
+    color: #000;
+}
+
+.card-brite-warning {
+    background-color: #ffc700;
+    border-color: #ffc700;
+    color: #000;
+}
+
+.card-brite-info {
+    background-color: #22d2ed;
+    border-color: #22d2ed;
+    color: #000;
+}
+
 .hero {
     background-image: linear-gradient(
         rgba(0,0,0,0.45),
