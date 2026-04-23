@@ -12,12 +12,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -33,7 +30,6 @@ public class SecurityConfig {
             requests.requestMatchers("/cliente/**").permitAll();
             requests.requestMatchers("/carrito/agregar").permitAll();
             requests.requestMatchers("/acceso_denegado").permitAll();
-            // Vendedor can view product/collection listings but not modify (CRUD routes stay in DB as ADMIN-only)
             requests.requestMatchers("/producto/listado", "/producto/listado/**").hasAnyRole("ADMIN", "VENDEDOR");
             requests.requestMatchers("/ordenes/**").hasAnyRole("ADMIN", "VENDEDOR");
             for (Ruta ruta : rutas) {
